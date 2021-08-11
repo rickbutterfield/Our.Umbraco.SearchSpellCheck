@@ -21,4 +21,7 @@
       <dependency id="UmbracoCms.Core" version="8.15.1" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="bin\Release\Our.Umbraco.SearchSpellCheck.dll" target="lib\net472\Our.Umbraco.SearchSpellCheck.dll" />
+  </files>
 </package>
