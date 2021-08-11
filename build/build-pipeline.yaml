@@ -33,7 +33,6 @@ steps:
     SourceFolder: '$(Build.SourcesDirectory)'
     Contents: |
      **\bin\$(buildConfiguration)\**\Our.Umbraco.SearchSpellCheck*.dll
-     **\Web\UI\**
     TargetFolder: '$(Build.ArtifactStagingDirectory)\files'
     CleanTargetFolder: true
     OverWrite: true
@@ -50,6 +49,7 @@ steps:
   displayName: 'Publish artifacts'
   inputs:
     ArtifactName: '$(packageName).$(Build.BuildNumber)'
+
 
 - task: NuGetCommand@2
   displayName: 'NuGet pack'
