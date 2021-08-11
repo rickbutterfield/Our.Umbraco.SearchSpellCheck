@@ -32,7 +32,7 @@ steps:
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)'
     Contents: |
-     **\bin\$(buildConfiguration)\**\$(packageName).dll
+     **\bin\$(buildConfiguration)\**\*.dll
      **\Web\UI\**
     TargetFolder: '$(Build.ArtifactStagingDirectory)\files'
     CleanTargetFolder: true
