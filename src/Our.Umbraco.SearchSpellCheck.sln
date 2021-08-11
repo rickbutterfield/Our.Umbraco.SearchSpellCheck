@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31521.260
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.SearchSpellCheck", "Our.Umbraco.SearchSpellCheck\Our.Umbraco.SearchSpellCheck.csproj", "{79DB343D-2F17-4FB2-B4BB-3707DA5FFAB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79DB343D-2F17-4FB2-B4BB-3707DA5FFAB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79DB343D-2F17-4FB2-B4BB-3707DA5FFAB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79DB343D-2F17-4FB2-B4BB-3707DA5FFAB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79DB343D-2F17-4FB2-B4BB-3707DA5FFAB4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3928FD63-B156-4FCD-9B89-4DE888F74CBE}
+	EndGlobalSection
+EndGlobal

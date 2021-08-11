@@ -1,0 +1,21 @@
+﻿using Umbraco.Core;
+using Umbraco.Core.Composing;
+using Our.Umbraco.SearchSpellCheck.Indexing;
+
+namespace Our.Umbraco.SearchSpellCheck.Startup
+{
+    [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
+    public class IndexComposer : IUserComposer
+    {
+        public void Compose(Composition composition)
+        {
+            composition.RegisterUnique<BackgroundIndexRebuilder>();
+
+            composition.RegisterUnique<SpellCheckValueSetBuilder>();
+            composition.Register<SpellCheckIndexPopulator>(Lifetime.Singleton);
+            composition.RegisterUnique<SpellCheckIndexCreator>();
+
+            composition.Components().Append<IndexComponent>();
+        }
+    }
+}
