@@ -17,7 +17,7 @@ steps:
 - task: NuGetCommand@2
   displayName: 'Restore NuGet packages'
   inputs:
-    restoreSolution: '**\$(packageName).csproj'
+    restoreSolution: '**\$(packageName).sln'
 
 - task: MSBuild@1
   displayName: 'Build package'
