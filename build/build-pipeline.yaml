@@ -55,9 +55,10 @@ steps:
   displayName: 'NuGet pack'
   inputs:
     command: 'pack'
-    packagesToPack: '**/*.csproj'
+    packagesToPack: '**/*.nuspec'
     versioningScheme: 'byEnvVar'
     versionEnvVar: 'packageVersion'
+    includeSymbols: true
 
 - task: NuGetCommand@2
   displayName: 'NuGet push'
