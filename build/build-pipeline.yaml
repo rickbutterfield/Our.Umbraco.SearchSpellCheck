@@ -22,7 +22,7 @@ steps:
 - task: MSBuild@1
   displayName: 'Build package'
   inputs:
-    solution: '**\$(packageName).csproj'
+    solution: '**\$(packageName).sln'
     configuration: '$(buildConfiguration)'
     msbuildArguments: '/p:Version=$(Build.BuildNumber) /p:PackageVersion=$(packageVersion) /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)\nuget'
     clean: true
