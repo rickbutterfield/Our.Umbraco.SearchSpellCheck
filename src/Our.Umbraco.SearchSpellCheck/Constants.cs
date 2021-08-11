@@ -4,7 +4,7 @@
     {
         internal static partial class Internals
         {
-            internal const string IndexName = "SpellCheckIndexAlt";
+            internal const string IndexName = "SpellCheckIndex";
             internal const string FieldName = "word";
         }
 
