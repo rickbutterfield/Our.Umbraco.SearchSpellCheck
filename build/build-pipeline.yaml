@@ -39,17 +39,17 @@ steps:
     OverWrite: true
     flattenFolders: true
 
-# - task: ArchiveFiles@2
-#   displayName: 'Zip package files'
-#   inputs:
-#     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\files'
-#     includeRootFolder: false
-#     archiveFile: '$(Build.ArtifactStagingDirectory)\zip\$(packageName).v$(packageVersion).zip'
+- task: ArchiveFiles@2
+  displayName: 'Zip package files'
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\files'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)\zip\$(packageName).v$(packageVersion).zip'
 
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Publish artifacts'
-#   inputs:
-#     ArtifactName: '$(packageName).$(Build.BuildNumber)'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    ArtifactName: '$(packageName).$(Build.BuildNumber)'
 
 - task: NuGetCommand@2
   displayName: 'NuGet pack'
