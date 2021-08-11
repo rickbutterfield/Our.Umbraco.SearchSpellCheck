@@ -22,6 +22,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\Our.Umbraco.SearchSpellCheck.dll" target="lib\net472\Our.Umbraco.SearchSpellCheck.dll" />
+    <file src="..\src\Our.Umbraco.SearchSpellCheck\bin\Release\Our.Umbraco.SearchSpellCheck.dll" target="lib\net472\Our.Umbraco.SearchSpellCheck.dll" />
   </files>
 </package>
