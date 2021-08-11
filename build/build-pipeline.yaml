@@ -52,6 +52,7 @@ steps:
 #     ArtifactName: '$(packageName).$(Build.BuildNumber)'
 
 - task: NuGetCommand@2
+  displayName: 'NuGet pack'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
@@ -59,6 +60,7 @@ steps:
     versionEnvVar: 'packageVersion'
 
 - task: NuGetCommand@2
+  displayName: 'NuGet push'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
