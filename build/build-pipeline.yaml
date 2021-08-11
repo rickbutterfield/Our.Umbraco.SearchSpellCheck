@@ -27,23 +27,6 @@ steps:
     msbuildArguments: '/p:Version=$(Build.BuildNumber) /p:PackageVersion=$(packageVersion) /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)\nuget'
     clean: true
 
-- task: NuGetCommand@2
-  displayName: 'NuGet pack'
-  inputs:
-    command: 'pack'
-    packagesToPack: '**/*.nuspec'
-    versioningScheme: 'byEnvVar'
-    versionEnvVar: 'packageVersion'
-    includeSymbols: true
-
-- task: NuGetCommand@2
-  displayName: 'NuGet push'
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    nuGetFeedType: 'external'
-    externalEndpoint: 'NuGet'
-
 - task: CopyFiles@2
   displayName: 'Copy package files'
   inputs:
@@ -66,3 +49,21 @@ steps:
   displayName: 'Publish artifacts'
   inputs:
     ArtifactName: '$(packageName).$(Build.BuildNumber)'
+
+
+- task: NuGetCommand@2
+  displayName: 'NuGet pack'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/*.nuspec'
+    versioningScheme: 'byEnvVar'
+    versionEnvVar: 'packageVersion'
+    includeSymbols: true
+
+- task: NuGetCommand@2
+  displayName: 'NuGet push'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'external'
+    externalEndpoint: 'NuGet'
