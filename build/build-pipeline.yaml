@@ -32,7 +32,7 @@ steps:
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)'
     Contents: |
-     **\bin\$(buildConfiguration)\**\*.dll
+     **\bin\$(buildConfiguration)\**\Our.Umbraco.SearchSpellCheck*.dll
      **\Web\UI\**
     TargetFolder: '$(Build.ArtifactStagingDirectory)\files'
     CleanTargetFolder: true
