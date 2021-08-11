@@ -1,5 +1,5 @@
 pool:
-  name: windows-2019
+  name: Hosted Windows 2019 with VS2019
   demands: msbuild
 
 name: $(packageVersion)$(Rev:.r)
