@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <appSettings>
+    <add key="Our.Umbraco.SearchSpellCheck.IndexName" xdt:Locator="Match(key)" xdt:Transform="Remove" />
+    <add key="Our.Umbraco.SearchSpellCheck.IndexedFields" xdt:Locator="Match(key)" xdt:Transform="Remove" />
+  </appSettings>
+</configuration>
