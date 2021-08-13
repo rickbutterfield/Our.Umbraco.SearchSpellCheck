@@ -4,6 +4,7 @@ using Umbraco.Core.IO;
 using Lucene.Net.Store;
 using Lucene.Net.Index;
 using SpellChecker.Net.Search.Spell;
+using System.Configuration;
 
 namespace Our.Umbraco.SearchSpellCheck
 {
@@ -17,7 +18,9 @@ namespace Our.Umbraco.SearchSpellCheck
 
         public static IOrderedEnumerable<Suggestion> GetSuggestions(string searchTerm, int numberOfSuggestions = 10)
         {
-            var indexReader = IndexReader.Open(GetFileSystemLuceneDirectory(Constants.Internals.IndexName), true);
+            string indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName];
+
+            var indexReader = IndexReader.Open(GetFileSystemLuceneDirectory(indexName), true);
 
             var jaro = new JaroWinklerDistance();
             var leven = new LevenshteinDistance();

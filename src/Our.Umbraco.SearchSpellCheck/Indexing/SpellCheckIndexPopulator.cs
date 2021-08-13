@@ -1,6 +1,7 @@
 ﻿using Examine;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +15,16 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
     {
         private readonly SpellCheckValueSetBuilder _spellCheckValueSetBuilder;
         private readonly IContentService _contentService;
+        private string _indexName;
 
         public SpellCheckIndexPopulator(SpellCheckValueSetBuilder spellCheckValueSetBuilder, IContentService contentService)
         {
             _spellCheckValueSetBuilder = spellCheckValueSetBuilder;
             _contentService = contentService;
-            RegisterIndex(Constants.Internals.IndexName);
+
+            _indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName];
+
+            RegisterIndex(_indexName);
         }
 
         protected override void PopulateIndexes(IReadOnlyList<IIndex> indexes)

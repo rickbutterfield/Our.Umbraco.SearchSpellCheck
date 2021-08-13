@@ -5,6 +5,7 @@ using System.Threading;
 using Umbraco.Core.Logging;
 using System.Threading.Tasks;
 using Umbraco.Web.Scheduling;
+using System.Configuration;
 
 namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
 {
@@ -16,6 +17,7 @@ namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
         private readonly IMainDom _mainDom;
         private readonly IndexRebuilder _indexRebuilder;
         private readonly ILogger _logger;
+        private string _indexName;
 
         public RebuildOnStartupTask(IMainDom mainDom,
                 IndexRebuilder indexRebuilder, ILogger logger)
@@ -23,6 +25,7 @@ namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
             _mainDom = mainDom;
             _indexRebuilder = indexRebuilder ?? throw new ArgumentNullException(nameof(indexRebuilder));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName];
         }
 
         public bool IsAsync => false;
@@ -58,7 +61,7 @@ namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
             //this can be called during a cold boot
             if (!_mainDom.IsMainDom) return;
 
-            _indexRebuilder.RebuildIndex(Constants.Internals.IndexName);
+            _indexRebuilder.RebuildIndex(_indexName);
         }
     }
 }
