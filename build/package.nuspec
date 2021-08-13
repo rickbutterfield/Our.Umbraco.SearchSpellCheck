@@ -23,6 +23,6 @@
   </metadata>
   <files>
     <file src="..\src\Our.Umbraco.SearchSpellCheck\bin\Release\Our.Umbraco.SearchSpellCheck.dll" target="lib\net472\Our.Umbraco.SearchSpellCheck.dll" />
-    <file src="build\transforms\web.config.install.xdt" target="content" />
+    <file src="transforms\web.config.install.xdt" target="content" />
   </files>
 </package>
