@@ -1,11 +1,15 @@
 ﻿using System;
-using Umbraco.Core;
-using Umbraco.Examine;
 using System.Threading;
-using Umbraco.Core.Logging;
 using System.Threading.Tasks;
-using Umbraco.Web.Scheduling;
 using System.Configuration;
+#if NETCOREAPP
+using Umbraco.Cms.Infrastructure;
+#else
+using Umbraco.Examine;
+using Umbraco.Core;
+using Umbraco.Web.Scheduling;
+using Umbraco.Core.Logging;
+#endif
 
 namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
 {

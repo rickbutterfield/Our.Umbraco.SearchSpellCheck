@@ -1,7 +1,12 @@
-﻿using Umbraco.Core.Logging;
+﻿#if NETCOREAPP
+using Umbraco.Cms.Core.Runtime;
+using Microsoft.Extensions.Logging;
+#else
 using Umbraco.Core;
 using Umbraco.Examine;
+using Umbraco.Core.Logging;
 using Umbraco.Web.Scheduling;
+#endif
 using Our.Umbraco.SearchSpellCheck.BackgroundTasks;
 
 namespace Our.Umbraco.SearchSpellCheck.Indexing
@@ -11,10 +16,10 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         private static readonly object RebuildLocker = new object();
         private readonly IndexRebuilder _indexRebuilder;
         private readonly IMainDom _mainDom;
-        private readonly IProfilingLogger _logger;
+        private readonly ILogger _logger;
         private static BackgroundTaskRunner<IBackgroundTask> _rebuildOnStartupRunner;
 
-        public BackgroundIndexRebuilder(IMainDom mainDom, IProfilingLogger logger, IndexRebuilder indexRebuilder)
+        public BackgroundIndexRebuilder(IMainDom mainDom, ILogger logger, IndexRebuilder indexRebuilder)
         {
             _mainDom = mainDom;
             _logger = logger;
@@ -32,11 +37,20 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             {
                 if (_rebuildOnStartupRunner != null && _rebuildOnStartupRunner.IsRunning)
                 {
+#if NETCOREAPP
+                    _logger.LogWarning("Call was made to RebuildIndexes but the task runner for rebuilding is already running");
+#else
                     _logger.Warn<BackgroundIndexRebuilder>("Call was made to RebuildIndexes but the task runner for rebuilding is already running");
+#endif
                     return;
                 }
 
+#if NETCOREAPP
+                _logger.LogInformation("Starting initialize async background thread.");
+#else
                 _logger.Info<BackgroundIndexRebuilder>("Starting initialize async background thread.");
+#endif 
+
                 //do the rebuild on a managed background thread
                 var task = new RebuildOnStartupTask(_mainDom, _indexRebuilder, _logger);
 

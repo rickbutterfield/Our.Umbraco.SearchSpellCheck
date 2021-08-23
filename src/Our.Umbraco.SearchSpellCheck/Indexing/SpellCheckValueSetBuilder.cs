@@ -1,23 +1,33 @@
-﻿using Examine;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System;
+using Examine;
 using System.Web;
+using System.Linq;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+#if NETCOREAPP
+using Umbraco.Extensions;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.Blocks;
+using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Infrastructure.Examine;
+#else
 using Umbraco.Core.Models.Blocks;
 using Umbraco.Core.Models;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Examine;
-using static Umbraco.Core.Models.Property;
-using Skybrud.Umbraco.GridData;
 using System.Configuration;
+using Skybrud.Umbraco.GridData;
+using static Umbraco.Core.Models.Property;
+#endif
 
 namespace Our.Umbraco.SearchSpellCheck.Indexing
 {
     public class SpellCheckValueSetBuilder : IValueSetBuilder<IContent>
     {
+        private IEnumerable<GridValue.GridControl> richTextValues;
+
         private ILogger _logger { get; set; }
         private IEnumerable<string> _fields { get; set; }
 
@@ -25,11 +35,14 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         {
             _logger = logger;
 
+#if NETCOREAPP
+#else
             var fields = ConfigurationManager.AppSettings[Constants.Configuration.IndexedFields];
             if (!string.IsNullOrEmpty(fields))
             {
                 _fields = fields.Split(',').Select(x => x.Trim());
             }
+#endif
         }
 
         /// <inheritdoc />
@@ -61,6 +74,48 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         /// </summary>
         /// <param name="properties">Properties to be checked</param>
         /// <param name="cleanValues">List of clean values to be output</param>
+#if NETCOREAPP
+        private void CollectCleanValues(IEnumerable<IProperty> properties, List<string> cleanValues)
+        {
+            foreach (var property in properties)
+            {
+                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextBox || property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextArea)
+                {
+                    foreach (var value in property.Values.WhereNotNull().Where(x => x.PublishedValue != null))
+                    {
+                        cleanValues.Add(CleanValue(value));
+                    }
+                }
+
+                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.Grid)
+                {
+                    foreach (var value in property.Values.WhereNotNull().Where(x => x.PublishedValue != null))
+                    {
+                        string json = value.PublishedValue.ToString();
+                        GridValue grid = JsonConvert.DeserializeObject<GridValue>(json);
+
+                        // Find all controls that use the RTE editor
+                        var controls = grid.Sections.SelectMany(x => x.Rows.SelectMany(r => r.Areas).SelectMany(a => a.Controls));
+                        var richTextValues = controls.Where(x => x.Editor.Alias.ToLowerInvariant() == "rte");
+
+                        foreach (var richText in richTextValues)
+                        {
+                            cleanValues.Add(CleanValue(richText.Value.ToString()));
+                        }
+                    }
+                }
+
+                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.BlockList)
+                {
+                    foreach (var value in property.Values.WhereNotNull().Where(x => x.PublishedValue != null))
+                    {
+                        string json = value.PublishedValue.ToString();
+                        GetBlockContent(json, ref cleanValues);
+                    }
+                }
+            }
+        }
+#else
         private void CollectCleanValues(IEnumerable<Property> properties, List<string> cleanValues)
         {
             foreach (var property in properties)
@@ -93,13 +148,14 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                 }
             }
         }
+#endif
 
-        /// <summary>
-        /// Get the internal content of a <see cref="BlockListItem"/>
-        /// </summary>
-        /// <param name="json"><see cref="string"/> to be parsed</param>
-        /// <param name="cleanValues">Reference variable of clean values</param>
-        private void GetBlockContent(string json, ref List<string> cleanValues)
+                        /// <summary>
+                        /// Get the internal content of a <see cref="BlockListItem"/>
+                        /// </summary>
+                        /// <param name="json"><see cref="string"/> to be parsed</param>
+                        /// <param name="cleanValues">Reference variable of clean values</param>
+                        private void GetBlockContent(string json, ref List<string> cleanValues)
         {
             BlockValue blockValue = JsonConvert.DeserializeObject<BlockValue>(json);
             if (blockValue != null)
@@ -117,7 +173,11 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                         }
                         catch (Exception ex)
                         {
+#if NETCOREAPP
+                            _logger.LogError(ex.Message);
+#else
                             _logger.Error<SpellCheckValueSetBuilder>(ex);
+#endif
                             cleanValues.Add(CleanValue(item.Value.ToString()));
                         }
                     }
@@ -128,14 +188,27 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         /// <summary>
         /// Take a <see cref="PropertyValue" /> and strip it down to just its text representation
         /// </summary>
+#if NETCOREAPP
+        /// <param name="value">The <see cref="IPropertyValue" /> to be cleaned</param>
+#else
         /// <param name="value">The <see cref="PropertyValue" /> to be cleaned</param>
+#endif
         /// <returns>A lowercased clean <see cref="string" /></returns>
+#if NETCOREAPP
+        private string CleanValue(IPropertyValue value, bool lowercase = true)
+        {
+            string result = value.PublishedValue.ToString();
+            result = CleanValue(result, lowercase);
+            return result;
+        }
+#else
         private string CleanValue(PropertyValue value, bool lowercase = true)
         {
             string result = value.PublishedValue.ToString();
             result = CleanValue(result, lowercase);
             return result;
         }
+#endif
 
         /// <summary>
         /// Take a <see cref="string" /> value and strip it down to just its text representation
@@ -163,6 +236,6 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
 
             return result;
         }
-        #endregion
+#endregion
     }
 }
