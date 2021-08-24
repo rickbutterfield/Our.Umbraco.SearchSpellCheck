@@ -11,6 +11,7 @@ using Umbraco.Web.Scheduling;
 using Umbraco.Core.Logging;
 #endif
 
+#if !NETCOREAPP
 namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
 {
     /// <summary>
@@ -69,3 +70,4 @@ namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
         }
     }
 }
+#endif

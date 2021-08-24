@@ -5,6 +5,7 @@
     <ContentTargetFolders>content</ContentTargetFolders>
     <Product>Our.Umbraco.SearchSpellCheck</Product>
     <PackageId>Our.Umbraco.SearchSpellCheck</PackageId>
+    <PackageVersion>1.0.0-beta</PackageVersion>
     <Title>Our.Umbraco.SearchSpellCheck</Title>
     <Description>A Lucene.Net-based spell checker for Umbraco v8.</Description>
     <PackageTags>umbraco, search, spell, check, examine, luncene, Rick, Butterfield</PackageTags>
@@ -15,6 +16,8 @@
     <Copyright>2021 Rick Butterfield</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
@@ -22,6 +25,8 @@
     <PackageReference Include="UmbracoCms.Web" version="8.15.0" />
     <PackageReference Include="Skybrud.Umbraco.GridData" version="3.0.1" />
     <PackageReference Include="Examine" version="1.2.0" />
+    <PackageReference Include="Lucene.Net" version="3.0.3" />    
+    <PackageReference Include="Lucene.Net.Contrib" version="3.0.3" />    
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
@@ -29,6 +34,8 @@
     <PackageReference Include="Umbraco.Cms.Infrastructure" version="9.0.0-rc002" />
     <PackageReference Include="Umbraco.Cms.Examine.Lucene" version="9.0.0-rc002" />
     <PackageReference Include="Examine" version="2.0.0-beta.154" />
+    <PackageReference Include="Lucene.Net" version="4.8.0-beta00014" />
+    <PackageReference Include="Lucene.Net.Suggest" version="4.8.0-beta00014" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,11 +45,15 @@
     <Content Include="Indexing\SpellCheckIndexCreator.cs" />
     <Content Include="Indexing\SpellCheckIndexPopulator.cs" />
     <Content Include="Indexing\SpellCheckValueSetBuilder.cs" />
-    <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Startup\IndexComponent.cs" />
     <Content Include="Startup\IndexComposer.cs" />
   </ItemGroup>
+
   <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
     <Content Include="Suggestions.cs" />

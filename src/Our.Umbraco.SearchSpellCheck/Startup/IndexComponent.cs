@@ -11,16 +11,15 @@ namespace Our.Umbraco.SearchSpellCheck.Startup
     public class IndexComponent : IComponent
     {
         private readonly IExamineManager _examineManager;
-        private readonly BackgroundIndexRebuilder _backgroundIndexRebuilder;
 #if !NETCOREAPP
+        private readonly BackgroundIndexRebuilder _backgroundIndexRebuilder;
         private readonly SpellCheckIndexCreator _spellCheckIndexCreator;
 #endif
 
 #if NETCOREAPP
-        public IndexComponent(IExamineManager examineManager, BackgroundIndexRebuilder backgroundIndexRebuilder)
+        public IndexComponent(IExamineManager examineManager)
         {
             _examineManager = examineManager;
-            _backgroundIndexRebuilder = backgroundIndexRebuilder;
         }
 #else
         public IndexComponent(IExamineManager examineManager, SpellCheckIndexCreator spellCheckIndexCreator, BackgroundIndexRebuilder backgroundIndexRebuilder)
@@ -38,12 +37,12 @@ namespace Our.Umbraco.SearchSpellCheck.Startup
             {
                 _examineManager.AddIndex(index);
             }
-#endif
 
             if (_backgroundIndexRebuilder != null)
             {
                 _backgroundIndexRebuilder.RebuildIndex();
             }
+#endif
         }
 
         public void Terminate()

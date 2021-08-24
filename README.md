@@ -15,11 +15,24 @@ On startup, this extension will index all the content in your site based on the 
 At present, the only way to install this is to use NuGet. You can find the package on [NuGet.org](https://www.nuget.org/packages/Our.Umbraco.SearchSpellCheck/) and install it using the Package Manager UI in Visual Studio.
 
 ## Configuration
+### v8
 When the package is installed, two new keys will be added to the `appSettings` section of your `web.config`:
 ```xml
 <add key="Our.Umbraco.SearchSpellCheck.IndexName" value="SpellCheckIndex" />
 <add key="Our.Umbraco.SearchSpellCheck.IndexedFields" value="nodeName" />
 ```
+
+### v9
+In v9 you'll need to use the `appSettings.json` file instead of the `web.config` file.
+```
+{
+  "Umbraco": {
+    "SearchSpellCheck": {
+      "IndexName": "SpellCheckIndex",
+      "IndexedFields": "nodeName"
+    }
+  }
+}
 
 ### `Our.Umbraco.SearchSpellCheck.IndexName`
 The name of the Lucene index to be created. This is the also name of the folder in the `App_Data` folder that contains the Lucene index. By default it is `SpellCheckIndex` but this can be changed if you need a different naming convention.

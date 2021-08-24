@@ -6,9 +6,10 @@ using Umbraco.Core;
 using Umbraco.Examine;
 using Umbraco.Core.Logging;
 using Umbraco.Web.Scheduling;
-#endif
 using Our.Umbraco.SearchSpellCheck.BackgroundTasks;
+#endif
 
+#if !NETCOREAPP
 namespace Our.Umbraco.SearchSpellCheck.Indexing
 {
     public class BackgroundIndexRebuilder
@@ -49,7 +50,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                 _logger.LogInformation("Starting initialize async background thread.");
 #else
                 _logger.Info<BackgroundIndexRebuilder>("Starting initialize async background thread.");
-#endif 
+#endif
 
                 //do the rebuild on a managed background thread
                 var task = new RebuildOnStartupTask(_mainDom, _indexRebuilder, _logger);
@@ -63,3 +64,4 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         }
     }
 }
+#endif
