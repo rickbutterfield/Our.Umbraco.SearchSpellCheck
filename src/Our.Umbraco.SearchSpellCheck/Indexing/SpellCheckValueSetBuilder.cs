@@ -117,7 +117,6 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error<SpellCheckValueSetBuilder>(ex);
                             cleanValues.Add(CleanValue(item.Value.ToString()));
                         }
                     }
