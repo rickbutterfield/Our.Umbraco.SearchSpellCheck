@@ -13,18 +13,36 @@ using System.IO;
 using System.Linq;
 using Lucene.Net.Store;
 using Lucene.Net.Index;
+using System.Collections.Generic;
 
 namespace Our.Umbraco.SearchSpellCheck
 {
     public static class Suggestions
     {
-        public static string GetSuggestion(string searchTerm, int numberOfSuggestions = 10)
+        public static string GetSuggestion(string searchTerm, int numberOfSuggestions = 10, float accuracy = 0.75f)
         {
-            var suggestions = GetSuggestions(searchTerm, numberOfSuggestions);
-            return suggestions.Select(x => x.Word).FirstOrDefault();
+            var words = searchTerm.Split(' ');
+            var suggestions = new List<string>();
+            foreach (string word in words)
+            {
+                var suggest = SuggestionData(word, numberOfSuggestions);
+                if (suggest.First() != null)
+                {
+                    if (suggest.First().Priority > accuracy)
+                    {
+                        suggestions.Add(suggest.First().Word);
+                    }
+                    else
+                    {
+                        suggestions.Add(word);
+                    }
+                }
+            }
+
+            return string.Join(" ", suggestions);
         }
 
-        public static IOrderedEnumerable<Suggestion> GetSuggestions(string searchTerm, int numberOfSuggestions = 10)
+        internal static IOrderedEnumerable<Suggestion> SuggestionData(string word, int numberOfSuggestions = 10, float searchAccuracy = 1f)
         {
             string indexName = string.Empty;
 
@@ -50,27 +68,37 @@ namespace Our.Umbraco.SearchSpellCheck
 
 #if NETCOREAPP
             var checker = new SpellChecker(new RAMDirectory(), jaro);
-            var suggestions = checker.SuggestSimilar(searchTerm, numberOfSuggestions, indexReader, Constants.Internals.FieldName, SuggestMode.SUGGEST_ALWAYS, 0.5f);
+            checker.IndexDictionary(new LuceneDictionary(indexReader, Constants.Internals.FieldName), null, true);
+            var suggestions = checker.SuggestSimilar(word, numberOfSuggestions, searchAccuracy);
 #else
             var checker = new SpellChecker.Net.Search.Spell.SpellChecker(new RAMDirectory(), jaro);
             checker.IndexDictionary(new LuceneDictionary(indexReader, Constants.Internals.FieldName));
-            var suggestions = checker.SuggestSimilar(searchTerm, numberOfSuggestions, indexReader, Constants.Internals.FieldName, true);
+            checker.SetAccuracy(searchAccuracy);
+            var suggestions = checker.SuggestSimilar(word, numberOfSuggestions);
 #endif
 
             var metrics = suggestions.Select(s => new Suggestion
             {
                 Word = s,
                 Frequency = indexReader.DocFreq(new Term(Constants.Internals.FieldName, s)),
-                Jaro = jaro.GetDistance(searchTerm, s),
-                Leven = leven.GetDistance(searchTerm, s),
-                NGram = ngram.GetDistance(searchTerm, s)
+                Jaro = jaro.GetDistance(word, s),
+                Leven = leven.GetDistance(word, s),
+                NGram = ngram.GetDistance(word, s)
             })
             .OrderByDescending(metric => Priority(metric));
 
-            return metrics;
+            var finalSuggestions = metrics.Select(s => new Suggestion
+            {
+                Word = s.Word,
+                Frequency = s.Frequency,
+                Priority = Priority(s)
+            })
+            .OrderByDescending(s => s.Priority);
+
+            return finalSuggestions;
         }
 
-        internal static float Priority(Suggestion metric)
+        internal static float? Priority(Suggestion metric)
         {
             return ((metric.Frequency / 100f) + metric.Jaro + metric.Leven + metric.NGram) / 4f;
         }

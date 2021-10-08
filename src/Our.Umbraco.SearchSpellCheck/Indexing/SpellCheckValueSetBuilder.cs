@@ -1,49 +1,57 @@
-﻿using System;
+﻿#if NETCOREAPP
+using Umbraco.Extensions;
+using Umbraco.Cms.Core.Models;
+using Skybrud.Umbraco.GridData;
+using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Core.Models.Blocks;
+using Skybrud.Umbraco.GridData.Models;
+using Umbraco.Cms.Infrastructure.Examine;
+#else
+using Umbraco.Core;
+using Umbraco.Examine;
+using Umbraco.Core.Models;
+using Umbraco.Core.Logging;
+using System.Configuration;
+using Skybrud.Umbraco.GridData;
+using Umbraco.Core.Models.Blocks;
+using static Umbraco.Core.Models.Property;
+#endif
+using System;
 using Examine;
 using System.Web;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-#if NETCOREAPP
-using Umbraco.Extensions;
-using Umbraco.Cms.Core.Models;
-using Umbraco.Cms.Core.Models.Blocks;
-using Microsoft.Extensions.Logging;
-using Umbraco.Cms.Infrastructure.Examine;
-#else
-using Umbraco.Core.Models.Blocks;
-using Umbraco.Core.Models;
-using Umbraco.Core;
-using Umbraco.Core.Logging;
-using Umbraco.Examine;
-using System.Configuration;
-using Skybrud.Umbraco.GridData;
-using static Umbraco.Core.Models.Property;
-#endif
 
 namespace Our.Umbraco.SearchSpellCheck.Indexing
 {
     public class SpellCheckValueSetBuilder : IValueSetBuilder<IContent>
     {
-        private IEnumerable<GridValue.GridControl> richTextValues;
-
         private ILogger _logger { get; set; }
         private IEnumerable<string> _fields { get; set; }
+#if NETCOREAPP
+        private GridContext _gridContext { get; set; }
+#endif
 
+#if NETCOREAPP
+        public SpellCheckValueSetBuilder(ILogger logger, GridContext gridContext)
+        {
+            _logger = logger;
+            _gridContext = gridContext;
+        }
+#else
         public SpellCheckValueSetBuilder(ILogger logger)
         {
             _logger = logger;
 
-#if NETCOREAPP
-#else
             var fields = ConfigurationManager.AppSettings[Constants.Configuration.IndexedFields];
             if (!string.IsNullOrEmpty(fields))
             {
                 _fields = fields.Split(',').Select(x => x.Trim());
             }
-#endif
         }
+#endif
 
         /// <inheritdoc />
         public IEnumerable<ValueSet> GetValueSets(params IContent[] content)
@@ -92,16 +100,8 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                     foreach (var value in property.Values.WhereNotNull().Where(x => x.PublishedValue != null))
                     {
                         string json = value.PublishedValue.ToString();
-                        GridValue grid = JsonConvert.DeserializeObject<GridValue>(json);
-
-                        // Find all controls that use the RTE editor
-                        var controls = grid.Sections.SelectMany(x => x.Rows.SelectMany(r => r.Areas).SelectMany(a => a.Controls));
-                        var richTextValues = controls.Where(x => x.Editor.Alias.ToLowerInvariant() == "rte");
-
-                        foreach (var richText in richTextValues)
-                        {
-                            cleanValues.Add(CleanValue(richText.Value.ToString()));
-                        }
+                        GridDataModel gridContent = JsonConvert.DeserializeObject<GridDataModel>(json);
+                        cleanValues.Add(CleanValue(gridContent.GetSearchableText(_gridContext)));
                     }
                 }
 
@@ -150,12 +150,12 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         }
 #endif
 
-                        /// <summary>
-                        /// Get the internal content of a <see cref="BlockListItem"/>
-                        /// </summary>
-                        /// <param name="json"><see cref="string"/> to be parsed</param>
-                        /// <param name="cleanValues">Reference variable of clean values</param>
-                        private void GetBlockContent(string json, ref List<string> cleanValues)
+        /// <summary>
+        /// Get the internal content of a <see cref="BlockListItem"/>
+        /// </summary>
+        /// <param name="json"><see cref="string"/> to be parsed</param>
+        /// <param name="cleanValues">Reference variable of clean values</param>
+        private void GetBlockContent(string json, ref List<string> cleanValues)
         {
             BlockValue blockValue = JsonConvert.DeserializeObject<BlockValue>(json);
             if (blockValue != null)
@@ -173,11 +173,6 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                         }
                         catch (Exception ex)
                         {
-#if NETCOREAPP
-                            _logger.LogError(ex.Message);
-#else
-                            _logger.Error<SpellCheckValueSetBuilder>(ex);
-#endif
                             cleanValues.Add(CleanValue(item.Value.ToString()));
                         }
                     }
@@ -236,6 +231,6 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
 
             return result;
         }
-#endregion
+        #endregion
     }
 }
