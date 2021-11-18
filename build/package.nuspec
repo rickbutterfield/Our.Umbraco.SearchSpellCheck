@@ -37,7 +37,8 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="..\src\Our.Umbraco.SearchSpellCheck\bin\Release\Our.Umbraco.SearchSpellCheck.dll" target="lib\net472\Our.Umbraco.SearchSpellCheck.dll" />
+		<file src="..\src\Our.Umbraco.SearchSpellCheck\bin\Release\net472\Our.Umbraco.SearchSpellCheck.dll" target="lib\net472\Our.Umbraco.SearchSpellCheck.dll" />
+		<file src="..\src\Our.Umbraco.SearchSpellCheck\bin\Release\net5.0\Our.Umbraco.SearchSpellCheck.dll" target="lib\5.0\Our.Umbraco.SearchSpellCheck.dll" />
 		<file src="transforms\web.config.install.xdt" target="content" />
 	</files>
 </package>
