@@ -59,7 +59,7 @@ The package is a single class called `Our.Umbraco.SearchSpellCheck.Suggestions`.
 - `IOrderedEnumerable<Suggestion> GetSuggestions(string searchTerm)` - returns a list of suggestions for the given word, and their weight.
 - `string GetSuggestion(string searchTerm)` - returns the first suggestion for the given word.
 
-### Example
+### v8
 Within a `SearchService`, you could use the `Suggestions` class to get suggestions for a given word:
 ```csharp
 public string GetSuggestion(string searchTerm)
