@@ -1,5 +1,5 @@
 ﻿# Our.Umbraco.SearchSpellCheck
-A Lucene.Net-based spell checker for Umbraco v8.
+A Lucene.Net-based spell checker for Umbraco v8 and v9.
 
 [![NuGet release](https://img.shields.io/nuget/v/Our.Umbraco.SearchSpellCheck.svg)](https://www.nuget.org/packages/Our.Umbraco.SearchSpellCheck/)
 [![Build Status](https://dev.azure.com/rickbutterfield/NuGet%20Packages/_apis/build/status/rickbutterfield.Our.Umbraco.SearchSpellCheck?branchName=main)](https://dev.azure.com/rickbutterfield/NuGet%20Packages/_build/latest?definitionId=2&branchName=main)
@@ -37,6 +37,7 @@ In v9 you'll need to use the `appSettings.json` file instead of the `web.config`
         "AutoRebuildRepeat": 30
     }
 }
+```
 
 ### `IndexName`
 The name of the Lucene index to be created. This is the also name of the folder in the `App_Data` folder that contains the Lucene index. By default it is `SpellCheckIndex` but this can be changed if you need a different naming convention.
@@ -58,7 +59,7 @@ The package is a single class called `Our.Umbraco.SearchSpellCheck.Suggestions`.
 - `IOrderedEnumerable<Suggestion> GetSuggestions(string searchTerm)` - returns a list of suggestions for the given word, and their weight.
 - `string GetSuggestion(string searchTerm)` - returns the first suggestion for the given word.
 
-### Example
+### v8
 Within a `SearchService`, you could use the `Suggestions` class to get suggestions for a given word:
 ```csharp
 public string GetSuggestion(string searchTerm)

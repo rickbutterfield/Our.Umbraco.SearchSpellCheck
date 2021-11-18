@@ -37,7 +37,7 @@ steps:
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)'
     Contents: |
-     **\bin\$(buildConfiguration)\**\Our.Umbraco.SearchSpellCheck*.dll
+     **\bin\**
     TargetFolder: '$(Build.ArtifactStagingDirectory)\files'
     CleanTargetFolder: true
     OverWrite: true
