@@ -30,9 +30,9 @@
 				<dependency id="Umbraco.Cms.Core" version="9.0.0" />
 				<dependency id="Umbraco.Cms.Infrastructure" version="9.0.0" />
 				<dependency id="Umbraco.Cms.Examine.Lucene" version="9.0.0" />
-				<dependency Include="Skybrud.Umbraco.GridData" version="4.0.0-alpha001" />
-				<dependency Include="Lucene.Net" version="4.8.0-beta00015" />
-				<dependency Include="Lucene.Net.Suggest" version="4.8.0-beta00015" />
+				<dependency id="Skybrud.Umbraco.GridData" version="4.0.0-alpha001" />
+				<dependency id="Lucene.Net" version="4.8.0-beta00015" />
+				<dependency id="Lucene.Net.Suggest" version="4.8.0-beta00015" />
 			</group>
 		</dependencies>
 	</metadata>
