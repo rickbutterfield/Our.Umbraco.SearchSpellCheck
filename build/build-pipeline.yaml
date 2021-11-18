@@ -11,6 +11,11 @@ variables:
 trigger: none
 
 steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '6.x'
+
 - task: NuGetToolInstaller@1
   displayName: 'Use latest NuGet'
 
