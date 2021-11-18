@@ -1,35 +1,25 @@
-﻿#if NETCOREAPP
-using Umbraco.Cms.Core.Composing;
-#else
-using Umbraco.Core.Composing;
-#endif
+﻿#if !NETCOREAPP
 using Examine;
+using Umbraco.Core.Composing;
 using Our.Umbraco.SearchSpellCheck.Indexing;
 using Umbraco.Examine;
 using Umbraco.Web.Scheduling;
 using Umbraco.Core.Logging;
 using Our.Umbraco.SearchSpellCheck.RecurringTasks;
 using System.Configuration;
+using System;
 
-namespace Our.Umbraco.SearchSpellCheck.Startup
+namespace Our.Umbraco.SearchSpellCheck.Composing
 {
     public class IndexComponent : IComponent
     {
-        private readonly IExamineManager _examineManager;
-#if !NETCOREAPP
         private readonly IProfilingLogger _logger;
         private readonly IndexRebuilder _indexRebuilder;
         private readonly SpellCheckIndexCreator _spellCheckIndexCreator;
         private readonly BackgroundIndexRebuilder _backgroundIndexRebuilder;
         private readonly BackgroundTaskRunner<IBackgroundTask> _indexRebuildRunner;
-#endif
+        private readonly IExamineManager _examineManager;
 
-#if NETCOREAPP
-        public IndexComponent(IExamineManager examineManager)
-        {
-            _examineManager = examineManager;
-        }
-#else
         public IndexComponent(IExamineManager examineManager, SpellCheckIndexCreator spellCheckIndexCreator, BackgroundIndexRebuilder backgroundIndexRebuilder, IndexRebuilder indexRebuilder, IProfilingLogger logger)
         {
             _logger = logger;
@@ -39,11 +29,9 @@ namespace Our.Umbraco.SearchSpellCheck.Startup
             _indexRebuilder = indexRebuilder;
             _indexRebuildRunner = new BackgroundTaskRunner<IBackgroundTask>("SpellCheckIndexRebuild", _logger);
         }
-#endif
 
         public void Initialize()
         {
-#if !NETCOREAPP
             foreach (var index in _spellCheckIndexCreator.Create())
             {
                 _examineManager.AddIndex(index);
@@ -56,24 +44,39 @@ namespace Our.Umbraco.SearchSpellCheck.Startup
 
             if (_indexRebuildRunner != null)
             {
-                bool autoRebuildIndex = false;
-                bool.TryParse(ConfigurationManager.AppSettings[Constants.Configuration.AutoRebuildIndex], out autoRebuildIndex);
+                bool autoRebuildIndex = true;
+                var autoRebuildConfig = ConfigurationManager.AppSettings[Constants.Configuration.AutoRebuildIndex];
+                if (autoRebuildConfig != null)
+                {
+                    bool.TryParse(autoRebuildConfig, out autoRebuildIndex);
+                }
 
                 if (autoRebuildIndex)
                 {
-                    int delayBeforeWeStart = 300000;
-                    int howOftenWeRepeat = 3600000;
+                    int delayBeforeWeStart = 5;
+                    int howOftenWeRepeat = 30;
 
-                    int.TryParse(ConfigurationManager.AppSettings[Constants.Configuration.AutoRebuildDelay], out delayBeforeWeStart);
-                    int.TryParse(ConfigurationManager.AppSettings[Constants.Configuration.AutoRebuildRepeat], out howOftenWeRepeat);
+                    var autoRebuildDelay = ConfigurationManager.AppSettings[Constants.Configuration.AutoRebuildDelay];
+                    if (autoRebuildDelay != null)
+                    {
+                        int.TryParse(autoRebuildDelay, out delayBeforeWeStart);
+                    }
 
-                    var task = new IndexRebuild(_indexRebuildRunner, delayBeforeWeStart, howOftenWeRepeat, _logger, _indexRebuilder);
+                    var autoRebuildRepeat = ConfigurationManager.AppSettings[Constants.Configuration.AutoRebuildRepeat];
+                    if (autoRebuildRepeat != null)
+                    {
+                        int.TryParse(autoRebuildRepeat, out howOftenWeRepeat);
+                    }
+
+                    TimeSpan delay = TimeSpan.FromMinutes(delayBeforeWeStart);
+                    TimeSpan repeat = TimeSpan.FromMinutes(howOftenWeRepeat);
+
+                    var task = new IndexRebuild(_indexRebuildRunner, ((int)delay.TotalMilliseconds), ((int)repeat.TotalMilliseconds), _logger, _indexRebuilder);
 
                     //As soon as we add our task to the runner it will start to run (after its delay period)
                     _indexRebuildRunner.TryAdd(task);
                 }
             }
-#endif
         }
 
         public void Terminate()
@@ -82,3 +85,4 @@ namespace Our.Umbraco.SearchSpellCheck.Startup
         }
     }
 }
+#endif

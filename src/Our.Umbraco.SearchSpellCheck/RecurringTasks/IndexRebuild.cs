@@ -1,4 +1,5 @@
-﻿using Examine;
+﻿#if !NETCOREAPP
+using Examine;
 using Umbraco.Examine;
 using Umbraco.Core.Logging;
 using Umbraco.Web.Scheduling;
@@ -22,7 +23,7 @@ namespace Our.Umbraco.SearchSpellCheck.RecurringTasks
 
         public override bool PerformRun()
         {
-            string indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName];
+            string indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName] ?? Constants.Configuration.DefaultIndexName;
 
             if (ExamineManager.Instance.TryGetIndex(indexName, out IIndex index))
             {
@@ -37,3 +38,4 @@ namespace Our.Umbraco.SearchSpellCheck.RecurringTasks
         }
     }
 }
+#endif

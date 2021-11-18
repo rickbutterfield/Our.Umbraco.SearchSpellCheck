@@ -1,17 +1,13 @@
-﻿using System;
+﻿#if !NETCOREAPP
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Configuration;
-#if NETCOREAPP
-using Umbraco.Cms.Infrastructure;
-#else
 using Umbraco.Examine;
 using Umbraco.Core;
 using Umbraco.Web.Scheduling;
 using Umbraco.Core.Logging;
-#endif
 
-#if !NETCOREAPP
 namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
 {
     /// <summary>
@@ -30,7 +26,7 @@ namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
             _mainDom = mainDom;
             _indexRebuilder = indexRebuilder ?? throw new ArgumentNullException(nameof(indexRebuilder));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName];
+            _indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName] ?? Constants.Configuration.DefaultIndexName;
         }
 
         public bool IsAsync => false;

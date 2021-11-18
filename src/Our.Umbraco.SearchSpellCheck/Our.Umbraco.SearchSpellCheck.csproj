@@ -30,13 +30,13 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="Umbraco.Cms.Core" version="9.0.0-rc002" />
-    <PackageReference Include="Umbraco.Cms.Infrastructure" version="9.0.0-rc002" />
-    <PackageReference Include="Umbraco.Cms.Examine.Lucene" version="9.0.0-rc002" />
+    <PackageReference Include="Examine" version="2.0.1" />
+    <PackageReference Include="Umbraco.Cms.Core" version="9.0.0" />
+    <PackageReference Include="Umbraco.Cms.Infrastructure" version="9.0.0" />
+    <PackageReference Include="Umbraco.Cms.Examine.Lucene" version="9.0.0" />
     <PackageReference Include="Skybrud.Umbraco.GridData" version="4.0.0-alpha001" />
-    <PackageReference Include="Examine" version="2.0.0-beta.154" />
-    <PackageReference Include="Lucene.Net" version="4.8.0-beta00014" />
-    <PackageReference Include="Lucene.Net.Suggest" version="4.8.0-beta00014" />
+    <PackageReference Include="Lucene.Net" version="4.8.0-beta00015" />
+    <PackageReference Include="Lucene.Net.Suggest" version="4.8.0-beta00015" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,8 +46,8 @@
     <Content Include="Indexing\SpellCheckIndexCreator.cs" />
     <Content Include="Indexing\SpellCheckIndexPopulator.cs" />
     <Content Include="Indexing\SpellCheckValueSetBuilder.cs" />
-    <Content Include="Startup\IndexComponent.cs" />
-    <Content Include="Startup\IndexComposer.cs" />
+    <Content Include="Composing\IndexComponent.cs" />
+    <Content Include="Composing\IndexComposer.cs" />
   </ItemGroup>
 
   <ItemGroup>

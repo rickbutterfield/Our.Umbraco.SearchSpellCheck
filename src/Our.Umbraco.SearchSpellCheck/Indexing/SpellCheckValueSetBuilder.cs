@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Umbraco.Cms.Core.Models.Blocks;
 using Skybrud.Umbraco.GridData.Models;
 using Umbraco.Cms.Infrastructure.Examine;
+using Microsoft.Extensions.Options;
 #else
 using Umbraco.Core;
 using Umbraco.Examine;
@@ -32,13 +33,15 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         private IEnumerable<string> _fields { get; set; }
 #if NETCOREAPP
         private GridContext _gridContext { get; set; }
+        private readonly SpellCheckOptions _options;
 #endif
 
 #if NETCOREAPP
-        public SpellCheckValueSetBuilder(ILogger logger, GridContext gridContext)
+        public SpellCheckValueSetBuilder(GridContext gridContext, IOptions<SpellCheckOptions> options)
         {
-            _logger = logger;
             _gridContext = gridContext;
+            _options = options.Value;
+            _fields = _options.IndexedFields;
         }
 #else
         public SpellCheckValueSetBuilder(ILogger logger)
@@ -49,6 +52,10 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             if (!string.IsNullOrEmpty(fields))
             {
                 _fields = fields.Split(',').Select(x => x.Trim());
+            }
+            else
+            {
+                _fields = new List<string>(new string[] { "nodeName" });
             }
         }
 #endif

@@ -1,7 +1,6 @@
 ﻿#if NETCOREAPP
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Examine;
 using Examine.Lucene;
 using Microsoft.Extensions.Logging;
@@ -17,7 +16,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         public SpellCheckIndex(
             ILoggerFactory loggerFactory,
             string name,
-            IOptionsSnapshot<LuceneDirectoryIndexOptions> indexOptions,
+            IOptionsMonitor<LuceneDirectoryIndexOptions> indexOptions,
             IHostingEnvironment hostingEnvironment,
             IRuntimeState runtimeState)
             : base(loggerFactory, name, indexOptions, hostingEnvironment, runtimeState)
@@ -36,7 +35,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             }
         }
 
-        void IIndex.IndexItems(IEnumerable<ValueSet> values) => PerformIndexItems(values.Where(v => v.ItemType == "knowledgebaseArticle"), OnIndexOperationComplete);
+        void IIndex.IndexItems(IEnumerable<ValueSet> values) => PerformIndexItems(values, OnIndexOperationComplete);
     }
 }
 #endif
