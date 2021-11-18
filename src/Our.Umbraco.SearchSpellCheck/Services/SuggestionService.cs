@@ -1,18 +1,28 @@
-﻿#if !NETCOREAPP
-using Umbraco.Core.IO;
-using System.Configuration;
-using SpellChecker.Net.Search.Spell;
+﻿#if NETCOREAPP
+using Lucene.Net.Index;
+using Lucene.Net.Search.Spell;
+using Lucene.Net.Store;
+using Microsoft.Extensions.Options;
+using Our.Umbraco.SearchSpellCheck.Interfaces;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Lucene.Net.Store;
-using Lucene.Net.Index;
-using System.Collections.Generic;
+using Umbraco.Cms.Core.Hosting;
 
-namespace Our.Umbraco.SearchSpellCheck
+namespace Our.Umbraco.SearchSpellCheck.Services
 {
-    public static class Suggestions
+    public class SuggestionService : ISuggestionService
     {
-        public static string GetSuggestion(string searchTerm, int numberOfSuggestions = 10, float accuracy = 0.75f)
+        private readonly SpellCheckOptions _options;
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public SuggestionService(IOptions<SpellCheckOptions> options, IHostingEnvironment hostingEnvironment)
+        {
+            _options = options.Value;
+            _hostingEnvironment = hostingEnvironment;
+        }
+
+        public string GetSuggestion(string searchTerm, int numberOfSuggestions = 10, float accuracy = 0.75f)
         {
             var words = searchTerm.Split(' ');
             var suggestions = new List<string>();
@@ -39,20 +49,22 @@ namespace Our.Umbraco.SearchSpellCheck
             return string.Join(" ", suggestions);
         }
 
-        internal static IOrderedEnumerable<Suggestion> SuggestionData(string word, int numberOfSuggestions = 10, float searchAccuracy = 1f)
+        public IOrderedEnumerable<Suggestion> SuggestionData(string word, int numberOfSuggestions = 10, float searchAccuracy = 1f)
         {
-            string indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName] ?? Constants.Configuration.DefaultIndexName;
-
-            var indexReader = IndexReader.Open(GetFileSystemLuceneDirectory(indexName), true);
+            var luceneDirectory = GetFileSystemLuceneDirectory(_options.IndexName);
+            var indexReader = DirectoryReader.Open(luceneDirectory);
 
             var jaro = new JaroWinklerDistance();
-            var leven = new LevenshteinDistance();
+            var leven = new LuceneLevenshteinDistance();
             var ngram = new NGramDistance();
 
-            var checker = new SpellChecker.Net.Search.Spell.SpellChecker(new RAMDirectory(), jaro);
-            checker.IndexDictionary(new LuceneDictionary(indexReader, Constants.Internals.FieldName));
+            var checker = new SpellChecker(new RAMDirectory(), jaro);
+            var dictionary = new LuceneDictionary(indexReader, Constants.Internals.FieldName);
+            var config = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, null);
 
-            var suggestions = checker.SuggestSimilar(word, numberOfSuggestions, indexReader, Constants.Internals.FieldName, true);
+            checker.IndexDictionary(dictionary, config, true);
+
+            var suggestions = checker.SuggestSimilar(word, numberOfSuggestions);
 
             var metrics = suggestions.Select(s => new Suggestion
             {
@@ -75,14 +87,18 @@ namespace Our.Umbraco.SearchSpellCheck
             return finalSuggestions;
         }
 
-        internal static float? Priority(Suggestion metric)
+        public float? Priority(Suggestion metric)
         {
             return ((metric.Frequency / 100f) + metric.Jaro + metric.Leven + metric.NGram) / 4f;
         }
 
-        internal static Lucene.Net.Store.Directory GetFileSystemLuceneDirectory(string indexName)
+        public SimpleFSDirectory GetFileSystemLuceneDirectory(string indexName)
         {
-            var dirInfo = new DirectoryInfo(Path.Combine(IOHelper.MapPath(SystemDirectories.TempData), "ExamineIndexes", indexName));
+            var dirInfo = new DirectoryInfo(
+                Path.Combine(
+                    _hostingEnvironment.MapPathContentRoot(global::Umbraco.Cms.Core.Constants.SystemDirectories.TempData),
+                    "ExamineIndexes",
+                    indexName));
             var luceneDir = new SimpleFSDirectory(dirInfo);
             return luceneDir;
         }

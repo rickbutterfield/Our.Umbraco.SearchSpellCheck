@@ -1,4 +1,5 @@
-﻿using Examine;
+﻿#if !NETCOREAPP
+using Examine;
 using Lucene.Net.Util;
 using Umbraco.Examine;
 using System.Collections.Generic;
@@ -31,3 +32,4 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         }
     }
 }
+#endif

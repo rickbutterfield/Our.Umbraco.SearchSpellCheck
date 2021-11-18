@@ -1,11 +1,12 @@
-﻿using System;
-using Umbraco.Core;
-using Umbraco.Examine;
+﻿#if !NETCOREAPP
+using System;
 using System.Threading;
-using Umbraco.Core.Logging;
 using System.Threading.Tasks;
-using Umbraco.Web.Scheduling;
 using System.Configuration;
+using Umbraco.Examine;
+using Umbraco.Core;
+using Umbraco.Web.Scheduling;
+using Umbraco.Core.Logging;
 
 namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
 {
@@ -25,7 +26,7 @@ namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
             _mainDom = mainDom;
             _indexRebuilder = indexRebuilder ?? throw new ArgumentNullException(nameof(indexRebuilder));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName];
+            _indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName] ?? Constants.Configuration.DefaultIndexName;
         }
 
         public bool IsAsync => false;
@@ -65,3 +66,4 @@ namespace Our.Umbraco.SearchSpellCheck.BackgroundTasks
         }
     }
 }
+#endif

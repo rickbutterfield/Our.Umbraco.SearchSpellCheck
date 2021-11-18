@@ -1,8 +1,10 @@
-﻿using Umbraco.Core;
+﻿#if !NETCOREAPP
+using Examine;
+using Umbraco.Core;
 using Umbraco.Core.Composing;
 using Our.Umbraco.SearchSpellCheck.Indexing;
 
-namespace Our.Umbraco.SearchSpellCheck.Startup
+namespace Our.Umbraco.SearchSpellCheck.Composing
 {
     [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
     public class IndexComposer : IUserComposer
@@ -19,3 +21,4 @@ namespace Our.Umbraco.SearchSpellCheck.Startup
         }
     }
 }
+#endif
