@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 - Option to enable or disable indexing on content published (default enabled)
 
 ## [1.0.0-beta.3] - 2021-11-19
-### Changed
+### Removed
 - Hotfix - disable packaging files into the NuGet package
 
 ## [1.0.0-beta.2] - 2021-11-18
@@ -31,3 +31,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 ## [0.0.1] - 2021-08-11
 ### Added
 - Initial release! Just the basic source code for now.
+
+[1.0.0-beta.3]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.3
+[1.0.0-beta.1]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.1
+[1.0.0-alpha.2]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-alpha.2
+[1.0.0-alpha]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-alpha
