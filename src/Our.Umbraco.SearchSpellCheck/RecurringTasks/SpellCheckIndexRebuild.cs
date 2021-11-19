@@ -1,12 +1,12 @@
 ﻿#if NETCOREAPP
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Our.Umbraco.SearchSpellCheck.Indexing;
 using System;
 using System.Threading.Tasks;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Runtime;
 using Umbraco.Cms.Core.Services;
-using Umbraco.Cms.Infrastructure.Examine;
 using Umbraco.Cms.Infrastructure.HostedServices;
 
 namespace Our.Umbraco.SearchSpellCheck.RecurringTasks
@@ -16,14 +16,14 @@ namespace Our.Umbraco.SearchSpellCheck.RecurringTasks
         private readonly IMainDom _mainDom;
         private readonly IRuntimeState _runtimeState;
         private readonly ILogger<SpellCheckIndexRebuild> _logger;
-        private readonly ExamineIndexRebuilder _backgroundIndexRebuilder;
+        private readonly SpellCheckIndexRebuilder _spellCheckIndexRebuilder;
         private readonly SpellCheckOptions _options;
 
         public SpellCheckIndexRebuild(
             IRuntimeState runtimeState,
             IMainDom mainDom,
             ILogger<SpellCheckIndexRebuild> logger,
-            ExamineIndexRebuilder backgroundIndexRebuilder,
+            SpellCheckIndexRebuilder spellCheckIndexRebuilder,
             IOptions<SpellCheckOptions> options)
             : base(
                 TimeSpan.FromMinutes(options.Value.AutoRebuildRepeat),
@@ -34,7 +34,7 @@ namespace Our.Umbraco.SearchSpellCheck.RecurringTasks
             _mainDom = mainDom;
             _options = options.Value;
             _runtimeState = runtimeState;
-            _backgroundIndexRebuilder = backgroundIndexRebuilder;
+            _spellCheckIndexRebuilder = spellCheckIndexRebuilder;
         }
 
         public override Task PerformExecuteAsync(object state)
@@ -52,7 +52,7 @@ namespace Our.Umbraco.SearchSpellCheck.RecurringTasks
 
             try
             {
-                _backgroundIndexRebuilder.RebuildIndex(_options.IndexName);
+                _spellCheckIndexRebuilder.RebuildIndex(_options.IndexName);
             }
             catch (Exception ex)
             {

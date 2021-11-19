@@ -3,7 +3,9 @@
 	<appSettings>
 		<add key="Our.Umbraco.SearchSpellCheck.IndexName" value="SpellCheckIndex" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
 		<add key="Our.Umbraco.SearchSpellCheck.IndexedFields" value="nodeName" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
-		<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildIndex" value="true" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
+		<add key="Our.Umbraco.SearchSpellCheck.BuildOnStartup" value="true" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
+		<add key="Our.Umbraco.SearchSpellCheck.RebuildOnPublish" value="true" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
+		<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildIndex" value="false" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
 		<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildDelay" value="5" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
 		<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildRepeat" value="30" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
 	</appSettings>

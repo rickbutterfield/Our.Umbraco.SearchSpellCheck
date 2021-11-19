@@ -37,7 +37,14 @@ namespace Our.Umbraco.SearchSpellCheck.Composing
                 _examineManager.AddIndex(index);
             }
 
-            if (_backgroundIndexRebuilder != null)
+            bool buildOnStartup = true;
+            var buildOnStartupConfig = ConfigurationManager.AppSettings[Constants.Configuration.BuildOnStartup];
+            if (buildOnStartupConfig != null)
+            {
+                bool.TryParse(buildOnStartupConfig, out buildOnStartup);
+            }
+
+            if (_backgroundIndexRebuilder != null && buildOnStartup)
             {
                 _backgroundIndexRebuilder.RebuildIndex();
             }

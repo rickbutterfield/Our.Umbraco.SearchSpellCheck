@@ -15,16 +15,6 @@ On startup, this extension will index all the content in your site based on the 
 At present, the only way to install this is to use NuGet. You can find the package on [NuGet.org](https://www.nuget.org/packages/Our.Umbraco.SearchSpellCheck/) and install it using the Package Manager UI in Visual Studio.
 
 ## Configuration
-### v8
-When the package is installed, new keys will be added to the `appSettings` section of your `web.config`:
-```xml
-<add key="Our.Umbraco.SearchSpellCheck.IndexName" value="SpellCheckIndex" />
-<add key="Our.Umbraco.SearchSpellCheck.IndexedFields" value="nodeName" />
-<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildIndex" value="true" />
-<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildDelay" value="5" />
-<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildRepeat" value="30" />
-```
-
 ### v9
 In v9 you'll need to use the `appSettings.json` file instead of the `web.config` file.
 ```
@@ -32,34 +22,80 @@ In v9 you'll need to use the `appSettings.json` file instead of the `web.config`
     "SearchSpellCheck": {
         "IndexName": "SpellCheckIndex",
         "IndexedFields": [ "nodeName" ],
-        "AutoRebuildIndex": true,
+        "BuildOnStartup": true,
+        "RebuildOnPublish": true,
+        "AutoRebuildIndex": false,
         "AutoRebuildDelay": 5,
         "AutoRebuildRepeat": 30
     }
 }
 ```
 
-### `IndexName`
-The name of the Lucene index to be created. This is the also name of the folder in the `App_Data` folder that contains the Lucene index. By default it is `SpellCheckIndex` but this can be changed if you need a different naming convention.
+### v8
+When the package is installed, new keys will be added to the `appSettings` section of your `web.config`:
+```xml
+<add key="Our.Umbraco.SearchSpellCheck.IndexName" value="SpellCheckIndex" />
+<add key="Our.Umbraco.SearchSpellCheck.IndexedFields" value="nodeName" />
+<add key="Our.Umbraco.SearchSpellCheck.BuildOnStartup" value="true" />
+<add key="Our.Umbraco.SearchSpellCheck.RebuildOnPublish" value="true" />
+<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildIndex" value="false" />
+<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildDelay" value="5" />
+<add key="Our.Umbraco.SearchSpellCheck.AutoRebuildRepeat" value="30" />
+```
 
-### `IndexedFields`
-The alias(es) of fields to be indexed. This is a comma-separated list of field names. By default only the `nodeName` field is indexed. Currently, there is support for text, [Grid Layout](https://our.umbraco.com/Documentation/Fundamentals/Backoffice/property-editors/built-in-property-editors/Grid-Layout/) and [Block List Editor](https://our.umbraco.com/Documentation/Fundamentals/Backoffice/property-editors/built-in-property-editors/Block-List-Editor/) fields.
+### Settings
+`IndexName`: The name of the Lucene index to be created. This is the also name of the folder in the `App_Data` folder that contains the Lucene index. By default it is `SpellCheckIndex` but this can be changed if you need a different naming convention.
 
-### `AutoRebuildIndex`
-Boolean indicating if you want a background process to run to rebuild the index. Defaults to true.
+`IndexedFields`: The alias(es) of fields to be indexed. This is a comma-separated list of field names. By default only the `nodeName` field is indexed. Currently, there is support for text, [Grid Layout](https://our.umbraco.com/Documentation/Fundamentals/Backoffice/property-editors/built-in-property-editors/Grid-Layout/) and [Block List Editor](https://our.umbraco.com/Documentation/Fundamentals/Backoffice/property-editors/built-in-property-editors/Block-List-Editor/) fields.
 
-### `AutoRebuildDelay`
-Number of minutes you want to delay the background process from starting. Defaults to 5 minutes.
+`BuildOnStartup`: Boolean indicating if you want the index to be populated on startup. Defaults to `true`.
 
-### `AutoRebuildRepeat`
-Number of minutes you want the scheduled background process to run. Defaults to 30 minutes.
+`RebuildOnPublish`: Boolean indicating if you want the index to be populated on content being saved and published successfully. Defaults to `true`.
+
+`AutoRebuildIndex`: Boolean indicating if you want a background process to run to rebuild the index. Defaults to `false`.
+
+`AutoRebuildDelay`: Number of minutes you want to delay the background process from starting. Defaults to `5` minutes.
+
+`AutoRebuildRepeat`: Number of minutes you want the scheduled background process to run. Defaults to `30` minutes.
 
 ## Usage
-The package is a single class called `Our.Umbraco.SearchSpellCheck.Suggestions`. This class contains two methods:
-- `IOrderedEnumerable<Suggestion> GetSuggestions(string searchTerm)` - returns a list of suggestions for the given word, and their weight.
-- `string GetSuggestion(string searchTerm)` - returns the first suggestion for the given word.
+### v9
+The package enables a `SuggestionService` to be injected in v9:
+```csharp
+private readonly IExamineManager _examineManager;
+private readonly ISuggestionService _suggestionService;
+
+public SearchService(IExamineManager examineManager, ISuggestionService suggestionService)
+{
+    _examineManager = examineManager;
+    _suggestionService = suggestionService;
+}
+
+public string GetSuggestions(string searchTerm)
+{
+    return _suggestionService.GetSuggestion(searchTerm, accuracy: 0.25f);
+}
+```
+
+Which could in turn be returned in a view component:
+```csharp
+if (model.TotalResults == 0)
+{
+    model.SpellCheck = _searchService.GetSuggestions(model.SearchTerm);
+}
+```
+
+And then returned in the view:
+```csharp
+@if (!string.IsNullOrEmpty(Model.SpellCheck))
+{
+    <p>Did you mean <a href="?s=@Model.SpellCheck"><em>@Model.SpellCheck</em></a>?</p>
+}
+```
 
 ### v8
+The package is a single class called `Our.Umbraco.SearchSpellCheck.Suggestions`.
+
 Within a `SearchService`, you could use the `Suggestions` class to get suggestions for a given word:
 ```csharp
 public string GetSuggestion(string searchTerm)
@@ -83,6 +119,7 @@ And then in your view:
     @:Did you mean <em><a href="?q=@Model.SpellCheck">@Model.SpellCheck</a></em>?
 }
 ```
+
 
 ## License
 Copyright &copy; 2021 [Rick Butterfield](https://rickbutterfield.com), and other contributors

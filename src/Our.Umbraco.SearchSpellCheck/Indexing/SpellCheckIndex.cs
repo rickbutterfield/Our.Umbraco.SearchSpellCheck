@@ -1,6 +1,7 @@
 ﻿#if NETCOREAPP
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Examine;
 using Examine.Lucene;
 using Microsoft.Extensions.Logging;
@@ -35,7 +36,11 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             }
         }
 
-        void IIndex.IndexItems(IEnumerable<ValueSet> values) => PerformIndexItems(values, OnIndexOperationComplete);
+        void IIndex.IndexItems(IEnumerable<ValueSet> values)
+        {
+            var vals = values.Where(x => x.Category == IndexTypes.Content);
+            PerformIndexItems(vals, OnIndexOperationComplete);
+        }
     }
 }
 #endif

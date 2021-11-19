@@ -1,15 +1,10 @@
-﻿#if NETCOREAPP
-using Umbraco.Cms.Core.Runtime;
-using Microsoft.Extensions.Logging;
-#else
+﻿#if !NETCOREAPP
 using Umbraco.Core;
 using Umbraco.Examine;
 using Umbraco.Core.Logging;
 using Umbraco.Web.Scheduling;
 using Our.Umbraco.SearchSpellCheck.BackgroundTasks;
-#endif
 
-#if !NETCOREAPP
 namespace Our.Umbraco.SearchSpellCheck.Indexing
 {
     public class BackgroundIndexRebuilder
@@ -38,19 +33,11 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             {
                 if (_rebuildOnStartupRunner != null && _rebuildOnStartupRunner.IsRunning)
                 {
-#if NETCOREAPP
-                    _logger.LogWarning("Call was made to RebuildIndexes but the task runner for rebuilding is already running");
-#else
                     _logger.Warn<BackgroundIndexRebuilder>("Call was made to RebuildIndexes but the task runner for rebuilding is already running");
-#endif
                     return;
                 }
 
-#if NETCOREAPP
-                _logger.LogInformation("Starting initialize async background thread.");
-#else
                 _logger.Info<BackgroundIndexRebuilder>("Starting initialize async background thread.");
-#endif
 
                 //do the rebuild on a managed background thread
                 var task = new RebuildOnStartupTask(_mainDom, _indexRebuilder, _logger);

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.4] - 2021-11-19
+### Added
+- Option to enable or disable index on startup (default enabled)
+- Option to enable or disable indexing on content published (default enabled)
+
 ## [1.0.0-beta.3] - 2021-11-19
 ### Changed
 - Hotfix - disable packaging files into the NuGet package
