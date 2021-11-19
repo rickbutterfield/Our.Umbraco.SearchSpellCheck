@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.3] - 2021-11-19
+### Changed
+- Hotfix - disable packaging files into the NuGet package
+
 ## [1.0.0-beta.2] - 2021-11-18
 ### Changed
 - Hotfix for getting the correct local TEMP path when using `"LocalTempStorageLocation": "EnvironmentTemp"`
-
 
 ## [1.0.0-beta.1] - 2021-11-18
 ### Added

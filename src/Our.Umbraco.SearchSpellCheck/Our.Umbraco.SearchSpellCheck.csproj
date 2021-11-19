@@ -5,7 +5,7 @@
     <ContentTargetFolders>content</ContentTargetFolders>
     <Product>Our.Umbraco.SearchSpellCheck</Product>
     <PackageId>Our.Umbraco.SearchSpellCheck</PackageId>
-    <PackageVersion>1.0.0-beta.2</PackageVersion>
+    <PackageVersion>1.0.0-beta.3</PackageVersion>
     <Title>Our.Umbraco.SearchSpellCheck</Title>
     <Description>A Lucene.Net-based spell checker for Umbraco v8.</Description>
     <PackageTags>umbraco, search, spell, check, examine, luncene, Rick, Butterfield</PackageTags>
@@ -40,24 +40,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="BackgroundTasks\RebuildOnStartupTask.cs" />
-    <Content Include="Constants.cs" />
-    <Content Include="Indexing\BackgroundIndexRebuilder.cs" />
-    <Content Include="Indexing\SpellCheckIndexCreator.cs" />
-    <Content Include="Indexing\SpellCheckIndexPopulator.cs" />
-    <Content Include="Indexing\SpellCheckValueSetBuilder.cs" />
-    <Content Include="Composing\IndexComponent.cs" />
-    <Content Include="Composing\IndexComposer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\..\README.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <Content Include="Suggestions.cs" />
-    <Content Include="Models\Suggestion.cs" />
   </ItemGroup>
 </Project>
