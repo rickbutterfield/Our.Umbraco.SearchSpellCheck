@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>Our.Umbraco.SearchSpellCheck</id>
-		<version>1.0.0-beta.4</version>
+		<version>1.0.0-beta.5</version>
 		<title>Our.Umbraco.SearchSpellCheck</title>
 		<authors>Rick Butterfield</authors>
 		<owners>Rick Butterfield</owners>
@@ -26,13 +26,13 @@
 				<dependency id="Lucene.Net.Contrib" version="3.0.3" />
 			</group>
 			<group targetFramework="net50">
-				<dependency id="Examine" version="2.0.1" />
+				<dependency id="Examine" version="2.0.0" />
 				<dependency id="Umbraco.Cms.Core" version="9.0.0" />
 				<dependency id="Umbraco.Cms.Infrastructure" version="9.0.0" />
 				<dependency id="Umbraco.Cms.Examine.Lucene" version="9.0.0" />
 				<dependency id="Skybrud.Umbraco.GridData" version="4.0.0-alpha001" />
-				<dependency id="Lucene.Net" version="4.8.0-beta00015" />
-				<dependency id="Lucene.Net.Suggest" version="4.8.0-beta00015" />
+				<dependency id="Lucene.Net" version="4.8.0-beta00014" />
+				<dependency id="Lucene.Net.Suggest" version="4.8.0-beta00014" />
 			</group>
 		</dependencies>
 	</metadata>
