@@ -96,7 +96,7 @@ namespace Our.Umbraco.SearchSpellCheck.Services
         {
             var dirInfo = new DirectoryInfo(
                 Path.Combine(
-                    _hostingEnvironment.LocalTempPath,
+                    _hostingEnvironment.MapPathContentRoot(global::Umbraco.Cms.Core.Constants.SystemDirectories.TempData),
                     "ExamineIndexes",
                     indexName));
             var luceneDir = new SimpleFSDirectory(dirInfo);

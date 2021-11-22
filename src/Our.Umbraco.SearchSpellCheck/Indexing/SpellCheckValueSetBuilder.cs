@@ -74,12 +74,13 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
 
                 var indexValues = new Dictionary<string, object>()
                 {
+                    ["nodeName"] = c.PublishName,
                     [Constants.Internals.FieldName] = allWords
                 };
 
-                var valueSet = new ValueSet(c.Id.ToString(), Constants.Internals.FieldName, indexValues);
+                var vs = new ValueSet(c.Id.ToInvariantString(), IndexTypes.Content, c.ContentType.Alias, indexValues);
 
-                yield return valueSet;
+                yield return vs;
             }
         }
 

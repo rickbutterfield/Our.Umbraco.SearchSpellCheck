@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if NETCOREAPP
+using System.Collections.Generic;
 
 namespace Our.Umbraco.SearchSpellCheck
 {
@@ -13,3 +14,4 @@ namespace Our.Umbraco.SearchSpellCheck
         public int AutoRebuildRepeat { get; set; } = 30;
     }
 }
+#endif

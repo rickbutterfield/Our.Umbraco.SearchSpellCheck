@@ -38,7 +38,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             long totalRecords = 0;
             int rootNode = -1;
             int pageIndex = 0;
-            int pageSize = 10000;
+            int pageSize = 500;
 
             do
             {
@@ -46,7 +46,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
 
                 if (content.Length > 0)
                 {
-                    var valueSets = _spellCheckValueSetBuilder.GetValueSets(content);
+                    var valueSets = _spellCheckValueSetBuilder.GetValueSets(content).ToList();
 
                     foreach (var index in indexes)
                     {
@@ -82,7 +82,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             long totalRecords = 0;
             int rootNode = -1;
             int pageIndex = 0;
-            int pageSize = 10000;
+            int pageSize = 500;
 
             do
             {
@@ -90,7 +90,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
 
                 if (content.Length > 0)
                 {
-                    var valueSets = _spellCheckValueSetBuilder.GetValueSets(content);
+                    var valueSets = _spellCheckValueSetBuilder.GetValueSets(content).ToList();
 
                     foreach (var index in indexes)
                     {

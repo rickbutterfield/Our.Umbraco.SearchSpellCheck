@@ -50,9 +50,11 @@ namespace Our.Umbraco.SearchSpellCheck
             var ngram = new NGramDistance();
 
             var checker = new SpellChecker.Net.Search.Spell.SpellChecker(new RAMDirectory(), jaro);
-            checker.IndexDictionary(new LuceneDictionary(indexReader, Constants.Internals.FieldName));
+            var dictionary = new LuceneDictionary(indexReader, Constants.Internals.FieldName);
 
-            var suggestions = checker.SuggestSimilar(word, numberOfSuggestions, indexReader, Constants.Internals.FieldName, true);
+            checker.IndexDictionary(dictionary);
+
+            var suggestions = checker.SuggestSimilar(word, numberOfSuggestions);
 
             var metrics = suggestions.Select(s => new Suggestion
             {

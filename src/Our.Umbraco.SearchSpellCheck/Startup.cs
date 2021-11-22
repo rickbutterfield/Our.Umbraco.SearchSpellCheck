@@ -24,7 +24,9 @@ namespace Our.Umbraco.SearchSpellCheck
             var options = builder.Config.GetSection(Constants.Configuration.ConfigurationSection).Get<SpellCheckOptions>();
 
             // Indexes
-            builder.Services.AddExamineLuceneIndex<SpellCheckIndex, ConfigurationEnabledDirectoryFactory>(options.IndexName);
+            builder.Services
+                .AddExamineLuceneIndex<SpellCheckIndex, ConfigurationEnabledDirectoryFactory>(options.IndexName)
+                .ConfigureOptions<SpellCheckIndexOptions>();
             builder.Services.AddSingleton<SpellCheckValueSetBuilder>();
             builder.Services.AddSingleton<IIndexPopulator, SpellCheckIndexPopulator>();
             builder.Services.AddSingleton<IIndexRebuilder, SpellCheckIndexRebuilder>();
