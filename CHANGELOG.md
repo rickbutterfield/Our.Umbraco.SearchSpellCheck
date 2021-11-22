@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.6] - 2021-11-22
+### Added
+- Added `nodeName` to index by default so that the Examine Dashboard shows the node name
+
+### Changed
+- Adjusted reference to Umbraco temp folder for v9
+- Updated index settings for v8
+
+## [1.0.0-beta.5] - 2021-11-20
+### Changed
+- Downgraded `Lucene.Net` dependency to `4.8.0-beta00014` for Umbraco 9 compatibility
+
 ## [1.0.0-beta.4] - 2021-11-19
 ### Added
 - Option to enable or disable index on startup (default enabled)
