@@ -1,11 +1,10 @@
 ﻿#if !NETCOREAPP
 using Examine;
-using Lucene.Net.Util;
 using Umbraco.Examine;
-using System.Collections.Generic;
-using Lucene.Net.Analysis.Standard;
-using Examine.LuceneEngine.Providers;
+using Examine.LuceneEngine;
 using System.Configuration;
+using System.Collections.Generic;
+using Examine.LuceneEngine.Providers;
 
 namespace Our.Umbraco.SearchSpellCheck.Indexing
 {
@@ -25,7 +24,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                 new FieldDefinitionCollection(
                     new FieldDefinition(Constants.Internals.FieldName, FieldDefinitionTypes.FullText)
                 ),
-                new StandardAnalyzer(Version.LUCENE_30)
+                new CultureInvariantWhitespaceAnalyzer()
             );
 
             return new[] { index };

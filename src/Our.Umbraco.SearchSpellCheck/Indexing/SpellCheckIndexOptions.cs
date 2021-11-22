@@ -1,7 +1,6 @@
 ﻿#if NETCOREAPP
-using Examine;
 using Examine.Lucene;
-using Lucene.Net.Analysis.Standard;
+using Examine.Lucene.Analyzers;
 using Lucene.Net.Index;
 using Microsoft.Extensions.Options;
 using System;
@@ -30,7 +29,7 @@ namespace Our.Umbraco.SearchSpellCheck
         {
             if (name == _options.Value.IndexName)
             {
-                options.Analyzer = new StandardAnalyzer(LuceneInfo.CurrentVersion);
+                options.Analyzer = new CultureInvariantWhitespaceAnalyzer();
                 options.Validator = _umbracoIndexConfig.GetPublishedContentValueSetValidator();
                 options.FieldDefinitions = new SpellCheckIndexFieldDefinitionCollection();
                 options.UnlockIndex = true;
