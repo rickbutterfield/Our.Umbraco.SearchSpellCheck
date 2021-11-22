@@ -44,6 +44,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 ### Added
 - Initial release! Just the basic source code for now.
 
+[1.0.0-beta.6]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.6
+[1.0.0-beta.5]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.5
 [1.0.0-beta.4]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.4
 [1.0.0-beta.3]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.3
 [1.0.0-beta.1]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.1
