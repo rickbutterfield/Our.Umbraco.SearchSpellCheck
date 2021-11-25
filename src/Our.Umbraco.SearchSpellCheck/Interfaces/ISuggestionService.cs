@@ -6,8 +6,8 @@ namespace Our.Umbraco.SearchSpellCheck.Interfaces
 {
     public interface ISuggestionService
     {
-        string GetSuggestion(string searchTerm, int numberOfSuggestions = 10, float accuracy = 0.75f);
-        IOrderedEnumerable<Suggestion> SuggestionData(string word, int numberOfSuggestions = 10, float searchAccuracy = 1f);
+        string GetSuggestion(string searchTerm, int numberOfSuggestions = 10, float accuracy = 0.75f, string culture = null);
+        IOrderedEnumerable<Suggestion> SuggestionData(string word, int numberOfSuggestions = 10, float searchAccuracy = 1f, string culture = null);
         float? Priority(Suggestion metric);
         SimpleFSDirectory GetFileSystemLuceneDirectory(string indexName);
     }

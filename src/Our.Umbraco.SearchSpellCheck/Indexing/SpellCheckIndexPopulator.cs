@@ -18,11 +18,11 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
 #if !NETCOREAPP
     public class SpellCheckIndexPopulator : IndexPopulator
     {
-        private readonly SpellCheckValueSetBuilder _spellCheckValueSetBuilder;
+        private readonly SpellCheckValueSetBuilderV8 _spellCheckValueSetBuilder;
         private readonly IContentService _contentService;
         private string _indexName;
 
-        public SpellCheckIndexPopulator(SpellCheckValueSetBuilder spellCheckValueSetBuilder, IContentService contentService)
+        public SpellCheckIndexPopulator(SpellCheckValueSetBuilderV8 spellCheckValueSetBuilder, IContentService contentService)
         {
             _spellCheckValueSetBuilder = spellCheckValueSetBuilder;
             _contentService = contentService;

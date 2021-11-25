@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.8] - 2021-11-25
+### Added
+- Added support for language variants
+
 ## [1.0.0-beta.7] - 2021-11-22
 ### Added
 - Package will now index from Umbraco TinyMCE fields
@@ -51,6 +55,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 ### Added
 - Initial release! Just the basic source code for now.
 
+[1.0.0-beta.8]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.8
 [1.0.0-beta.7]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.7
 [1.0.0-beta.6]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.6
 [1.0.0-beta.5]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.5

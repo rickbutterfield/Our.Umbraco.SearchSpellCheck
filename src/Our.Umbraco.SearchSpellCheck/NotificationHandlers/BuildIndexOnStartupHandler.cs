@@ -1,4 +1,5 @@
 ﻿#if NETCOREAPP
+using Microsoft.Extensions.Options;
 using Our.Umbraco.SearchSpellCheck.Indexing;
 using System;
 using System.Threading;
@@ -7,14 +8,16 @@ using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Sync;
+using Umbraco.Cms.Infrastructure.Examine;
 
 namespace Our.Umbraco.SearchSpellCheck.NotificationHandlers
 {
     internal class BuildIndexOnStartupHandler : INotificationHandler<UmbracoRequestBeginNotification>
     {
         private readonly ISyncBootStateAccessor _syncBootStateAccessor;
-        private readonly SpellCheckIndexRebuilder _backgroundIndexRebuilder;
+        private readonly ExamineIndexRebuilder _examineIndexRebuilder;
         private readonly IRuntimeState _runtimeState;
+        private readonly SpellCheckOptions _spellCheckOptions;
 
         private static bool _isReady;
         private static bool _isReadSet;
@@ -22,12 +25,14 @@ namespace Our.Umbraco.SearchSpellCheck.NotificationHandlers
 
         public BuildIndexOnStartupHandler(
             ISyncBootStateAccessor syncBootStateAccessor,
-            SpellCheckIndexRebuilder backgroundIndexRebuilder,
-            IRuntimeState runtimeState)
+            ExamineIndexRebuilder examineIndexRebuilder,
+            IRuntimeState runtimeState,
+            IOptions<SpellCheckOptions> spellCheckOptions)
         {
             _syncBootStateAccessor = syncBootStateAccessor;
-            _backgroundIndexRebuilder = backgroundIndexRebuilder;
+            _examineIndexRebuilder = examineIndexRebuilder;
             _runtimeState = runtimeState;
+            _spellCheckOptions = spellCheckOptions.Value;
         }
 
         /// <summary>
@@ -49,9 +54,8 @@ namespace Our.Umbraco.SearchSpellCheck.NotificationHandlers
                 {
                     SyncBootState bootState = _syncBootStateAccessor.GetSyncBootState();
 
-                    _backgroundIndexRebuilder.RebuildIndexes(
-                        // if it's not a cold boot, only rebuild empty ones
-                        bootState != SyncBootState.ColdBoot,
+                    _examineIndexRebuilder.RebuildIndex(
+                        _spellCheckOptions.IndexName,
                         TimeSpan.FromMinutes(1));
 
                     return true;

@@ -29,8 +29,6 @@ namespace Our.Umbraco.SearchSpellCheck
                 .ConfigureOptions<SpellCheckIndexOptions>();
             builder.Services.AddSingleton<SpellCheckValueSetBuilder>();
             builder.Services.AddSingleton<IIndexPopulator, SpellCheckIndexPopulator>();
-            builder.Services.AddSingleton<IIndexRebuilder, SpellCheckIndexRebuilder>();
-            builder.Services.AddUnique<SpellCheckIndexRebuilder>();
 
             if (options.AutoRebuildIndex)
             {

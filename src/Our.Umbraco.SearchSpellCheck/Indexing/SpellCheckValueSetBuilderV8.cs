@@ -1,56 +1,41 @@
-﻿#if NETCOREAPP
+﻿#if !NETCOREAPP
 using Examine;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Skybrud.Umbraco.GridData;
-using Skybrud.Umbraco.GridData.Factories;
-using Skybrud.Umbraco.GridData.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
-using Umbraco.Cms.Core.Models;
-using Umbraco.Cms.Core.Models.Blocks;
-using Umbraco.Cms.Core.PropertyEditors;
-using Umbraco.Cms.Core.Strings;
-using Umbraco.Cms.Infrastructure.Examine;
-using Umbraco.Extensions;
+using Umbraco.Core;
+using Umbraco.Core.Models;
+using Umbraco.Core.Models.Blocks;
+using Umbraco.Core.PropertyEditors;
+using Umbraco.Examine;
 
 namespace Our.Umbraco.SearchSpellCheck.Indexing
 {
-    public class SpellCheckValueSetBuilder : BaseValueSetBuilder<IContent>
+    public class SpellCheckValueSetBuilderV8 : BaseValueSetBuilder<IContent>
     {
         private string[] SUPPORTED_FIELDS = new string[]
         {
-            global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextBox,
-            global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextArea,
-            global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TinyMce,
-            global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.Grid,
-            global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.BlockList
+            global::Umbraco.Core.Constants.PropertyEditors.Aliases.TextBox,
+            global::Umbraco.Core.Constants.PropertyEditors.Aliases.TextArea,
+            global::Umbraco.Core.Constants.PropertyEditors.Aliases.TinyMce,
+            global::Umbraco.Core.Constants.PropertyEditors.Aliases.Grid,
+            global::Umbraco.Core.Constants.PropertyEditors.Aliases.BlockList
         };
 
         private IEnumerable<string> _fields { get; set; }
-        private readonly UrlSegmentProviderCollection _urlSegmentProviders;
         private readonly PropertyEditorCollection _propertyEditors;
-        private ILogger<SpellCheckValueSetBuilder> _logger { get; set; }
-        private readonly GridContext _gridContext;
-        private readonly IGridFactory _gridFactory;
-        private readonly SpellCheckOptions _options;
-        private readonly IShortStringHelper _shortStringHelper;
 
-        public SpellCheckValueSetBuilder(GridContext gridContext, IOptions<SpellCheckOptions> options, ILogger<SpellCheckValueSetBuilder> logger, UrlSegmentProviderCollection urlSegmentProviders, IShortStringHelper shortStringHelper, PropertyEditorCollection propertyEditors, IGridFactory gridFactory) : base(propertyEditors, true)
+        public SpellCheckValueSetBuilderV8(PropertyEditorCollection propertyEditors) : base(propertyEditors, true)
         {
-            _gridContext = gridContext;
-            _gridFactory = gridFactory;
-            _options = options.Value;
-            _fields = _options.IndexedFields;
-            _logger = logger;
-            _urlSegmentProviders = urlSegmentProviders;
-            _shortStringHelper = shortStringHelper;
             _propertyEditors = propertyEditors;
+
+            var fields = ConfigurationManager.AppSettings[Constants.Configuration.IndexedFields];
+            _fields = fields.Split(',').ToList();
         }
 
         /// <inheritdoc />
@@ -59,26 +44,22 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             foreach (var c in content)
             {
                 var isVariant = c.ContentType.VariesByCulture();
-                var urlValue = c.GetUrlSegment(_shortStringHelper, _urlSegmentProviders);
                 var properties = c.Properties.Where(x => _fields.Contains(x.Alias) && SUPPORTED_FIELDS.Contains(x.PropertyType.PropertyEditorAlias));
 
                 var indexValues = new Dictionary<string, object>()
                 {
                     ["id"] = c.Id,
-                    [UmbracoExamineFieldNames.NodeKeyFieldName] = c.Key,
-                    [UmbracoExamineFieldNames.NodeNameFieldName] = c.PublishName ?? c.Name,
-                    ["urlName"] = urlValue
+                    [UmbracoExamineIndex.NodeKeyFieldName] = c.Key,
+                    ["nodeName"] = c.PublishName ?? c.Name,
                 };
 
                 if (isVariant)
                 {
-                    indexValues[UmbracoExamineFieldNames.VariesByCultureFieldName] = new object[] { "y" };
+                    indexValues["__VariesByCulture"] = new object[] { "y" };
 
                     foreach (var culture in c.AvailableCultures)
                     {
                         var lowerCulture = culture.ToLowerInvariant();
-                        var variantUrl = c.GetUrlSegment(_shortStringHelper, _urlSegmentProviders, culture);
-                        indexValues[$"urlName_{lowerCulture}"] = variantUrl;
                         indexValues[$"nodeName_{lowerCulture}"] = c.GetPublishName(lowerCulture);
                         indexValues[$"{Constants.Internals.FieldName}_{lowerCulture}"] = CollectCleanValues(properties, culture.ToLowerInvariant());
                     }
@@ -100,13 +81,13 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         /// </summary>
         /// <param name="properties">Properties to be checked</param>
         /// <param name="cleanValues">List of clean values to be output</param>
-        private string CollectCleanValues(IEnumerable<IProperty> properties, string culture = null)
+        private string CollectCleanValues(IEnumerable<Property> properties, string culture = null)
         {
             List<string> cleanValues = new List<string>();
 
             foreach (var property in properties)
             {
-                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextBox || property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextArea || property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TinyMce)
+                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Core.Constants.PropertyEditors.Aliases.TextBox || property.PropertyType.PropertyEditorAlias == global::Umbraco.Core.Constants.PropertyEditors.Aliases.TextArea || property.PropertyType.PropertyEditorAlias == global::Umbraco.Core.Constants.PropertyEditors.Aliases.TinyMce)
                 {
                     var propertyValues = property.Values.WhereNotNull().Where(x => x.PublishedValue != null);
 
@@ -121,7 +102,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                     }
                 }
 
-                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.Grid)
+                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Core.Constants.PropertyEditors.Aliases.Grid)
                 {
                     var propertyValues = property.Values.WhereNotNull().Where(x => x.PublishedValue != null);
 
@@ -133,13 +114,13 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                     foreach (var value in propertyValues)
                     {
                         string json = value.PublishedValue.ToString();
-                        GridDataModel gridContent = new GridDataModel(null, null, JObject.Parse(json), _gridFactory);
-                        string searchableText = gridContent.GetSearchableText(_gridContext);
+                        GridDataModel gridContent = GridDataModel.Deserialize(json);
+                        string searchableText = gridContent.GetSearchableText();
                         cleanValues.Add(CleanValue(searchableText));
                     }
                 }
 
-                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.BlockList)
+                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Core.Constants.PropertyEditors.Aliases.BlockList)
                 {
                     var propertyValues = property.Values.WhereNotNull().Where(x => x.PublishedValue != null);
 
@@ -194,7 +175,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
         /// </summary>
         /// <param name="value">The <see cref="IPropertyValue" /> to be cleaned</param>
         /// <returns>A lowercased clean <see cref="string" /></returns>
-        private string CleanValue(IPropertyValue value, bool lowercase = true)
+        private string CleanValue(Property.PropertyValue value, bool lowercase = true)
         {
             string result = value.PublishedValue.ToString();
             result = CleanValue(result, lowercase);

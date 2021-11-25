@@ -22,13 +22,13 @@ namespace Our.Umbraco.SearchSpellCheck.Services
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public string GetSuggestion(string searchTerm, int numberOfSuggestions = 10, float accuracy = 0.75f)
+        public string GetSuggestion(string searchTerm, int numberOfSuggestions = 10, float accuracy = 0.75f, string culture = null)
         {
             var words = searchTerm.Split(' ');
             var suggestions = new List<string>();
             foreach (string word in words)
             {
-                var suggest = SuggestionData(word, numberOfSuggestions);
+                var suggest = SuggestionData(word, numberOfSuggestions, accuracy, culture: culture);
                 if (suggest != null)
                 {
                     var first = suggest.FirstOrDefault();
@@ -49,7 +49,7 @@ namespace Our.Umbraco.SearchSpellCheck.Services
             return string.Join(" ", suggestions);
         }
 
-        public IOrderedEnumerable<Suggestion> SuggestionData(string word, int numberOfSuggestions = 10, float searchAccuracy = 1f)
+        public IOrderedEnumerable<Suggestion> SuggestionData(string word, int numberOfSuggestions = 10, float searchAccuracy = 1f, string culture = null)
         {
             var luceneDirectory = GetFileSystemLuceneDirectory(_options.IndexName);
             var indexReader = DirectoryReader.Open(luceneDirectory);
@@ -59,17 +59,27 @@ namespace Our.Umbraco.SearchSpellCheck.Services
             var ngram = new NGramDistance();
 
             var checker = new SpellChecker(new RAMDirectory(), jaro);
-            var dictionary = new LuceneDictionary(indexReader, Constants.Internals.FieldName);
-            var config = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, null);
+            string fieldName = Constants.Internals.FieldName;
+            if (culture != null)
+            {
+                fieldName += $"_{culture}";
+            }
 
-            checker.IndexDictionary(dictionary, config, true);
+            var fieldDictionary = new LuceneDictionary(indexReader, fieldName);
+            var nodeNameDictionary = new LuceneDictionary(indexReader, "nodeName");
+
+            var fieldConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, null);
+            var nodeNameConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, null);
+
+            checker.IndexDictionary(fieldDictionary, fieldConfig, true);
+            checker.IndexDictionary(nodeNameDictionary, nodeNameConfig, true);
 
             var suggestions = checker.SuggestSimilar(word, numberOfSuggestions);
 
             var metrics = suggestions.Select(s => new Suggestion
             {
                 Word = s,
-                Frequency = indexReader.DocFreq(new Term(Constants.Internals.FieldName, s)),
+                Frequency = indexReader.DocFreq(new Term(fieldName, s)),
                 Jaro = jaro.GetDistance(s, word),
                 Leven = leven.GetDistance(s, word),
                 NGram = ngram.GetDistance(s, word)

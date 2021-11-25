@@ -13,7 +13,7 @@ namespace Our.Umbraco.SearchSpellCheck.Composing
         {
             composition.RegisterUnique<BackgroundIndexRebuilder>();
 
-            composition.RegisterUnique<SpellCheckValueSetBuilder>();
+            composition.RegisterUnique<SpellCheckValueSetBuilderV8>();
             composition.Register<SpellCheckIndexPopulator>(Lifetime.Singleton);
             composition.RegisterUnique<SpellCheckIndexCreator>();
 
