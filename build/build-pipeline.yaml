@@ -2,7 +2,7 @@ pool:
   name: Hosted Windows 2019 with VS2019
   demands: msbuild
 
-name: $(packageVersion)$(Rev:.r)
+name: $(Build.SourceBranchName)_$(date:yyyyMMdd)$(rev:.r)
 
 variables:
   buildConfiguration: 'Release'
