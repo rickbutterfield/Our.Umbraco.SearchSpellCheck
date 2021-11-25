@@ -29,7 +29,7 @@ steps:
   inputs:
     solution: '**\$(packageName).sln'
     configuration: '$(buildConfiguration)'
-    msbuildArguments: '/p:Version=$(Build.BuildNumber) /p:PackageVersion=$(packageVersion) /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)\nuget'
+    msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)\nuget'
     clean: true
 
 - task: CopyFiles@2
