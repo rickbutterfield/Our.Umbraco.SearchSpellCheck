@@ -65,7 +65,26 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             {
                 var isVariant = c.ContentType.VariesByCulture();
                 var urlValue = c.GetUrlSegment(_shortStringHelper, _urlSegmentProviders);
-                var properties = c.Properties.Where(x => _fields.Contains(x.Alias) && SUPPORTED_FIELDS.Contains(x.PropertyType.PropertyEditorAlias));
+                var properties = c.Properties.ToList();
+
+                if (_options.EnableLogging)
+                {
+                    _logger.LogInformation("Properties: ", string.Join(", ", properties.Select(x => x.Alias)));
+                }
+
+                properties = properties.Where(x => _fields.Contains(x.Alias)).ToList();
+
+                if (_options.EnableLogging)
+                {
+                    _logger.LogInformation("Properties filtered by IndexedFields: ", string.Join(", ", properties.Select(x => x.Alias)));
+                }
+
+                properties = properties.Where(x => SUPPORTED_FIELDS.Contains(x.PropertyType.PropertyEditorAlias)).ToList();
+
+                if (_options.EnableLogging)
+                {
+                    _logger.LogInformation("Properties filtered by SUPPORTED_FIELDS: ", string.Join(", ", properties.Select(x => x.Alias)));
+                }
                 
                 if (_options.EnableLogging)
                 {

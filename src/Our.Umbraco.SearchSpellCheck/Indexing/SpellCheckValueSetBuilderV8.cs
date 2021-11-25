@@ -58,7 +58,26 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             foreach (var c in content)
             {
                 var isVariant = c.ContentType.VariesByCulture();
-                var properties = c.Properties.Where(x => _fields.Contains(x.Alias) && SUPPORTED_FIELDS.Contains(x.PropertyType.PropertyEditorAlias));
+                var properties = c.Properties.ToList();
+
+                if (EnableLogging)
+                {
+                    _logger.Info<SpellCheckValueSetBuilderV8>("Properties: ", string.Join(", ", properties.Select(x => x.Alias)));
+                }
+
+                properties = properties.Where(x => _fields.Contains(x.Alias)).ToList();
+                
+                if (EnableLogging)
+                {
+                    _logger.Info<SpellCheckValueSetBuilderV8>("Properties filtered by IndexedFields: ", string.Join(", ", properties.Select(x => x.Alias)));
+                }
+
+                properties = properties.Where(x => SUPPORTED_FIELDS.Contains(x.PropertyType.PropertyEditorAlias)).ToList();
+
+                if (EnableLogging)
+                {
+                    _logger.Info<SpellCheckValueSetBuilderV8>("Properties filtered by SUPPORTED_FIELDS: ", string.Join(", ", properties.Select(x => x.Alias)));
+                }
 
                 if (EnableLogging)
                 {
