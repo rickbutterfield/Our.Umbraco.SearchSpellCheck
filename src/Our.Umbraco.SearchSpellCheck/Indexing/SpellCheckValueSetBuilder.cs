@@ -51,6 +51,11 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
             _urlSegmentProviders = urlSegmentProviders;
             _shortStringHelper = shortStringHelper;
             _propertyEditors = propertyEditors;
+
+            if (_options.EnableLogging)
+            {
+                _logger.LogInformation("Indexed fields: {0}", string.Join(", ", _fields));
+            }
         }
 
         /// <inheritdoc />
@@ -61,6 +66,12 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                 var isVariant = c.ContentType.VariesByCulture();
                 var urlValue = c.GetUrlSegment(_shortStringHelper, _urlSegmentProviders);
                 var properties = c.Properties.Where(x => _fields.Contains(x.Alias) && SUPPORTED_FIELDS.Contains(x.PropertyType.PropertyEditorAlias));
+                
+                if (_options.EnableLogging)
+                {
+                    _logger.LogInformation("Indexing content {0} ({1})", c.PublishName ?? c.Name, c.Id);
+                    _logger.LogInformation("Properties to be indexed: {0}", string.Join(", ", properties.Select(x => x.Alias)));
+                }
 
                 var indexValues = new Dictionary<string, object>()
                 {
@@ -88,13 +99,18 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
                     indexValues[Constants.Internals.FieldName] = CollectCleanValues(properties, null);
                 }
 
+                if (_options.EnableLogging)
+                {
+                    _logger.LogInformation("Index values: {0}", JsonConvert.SerializeObject(indexValues));
+                }
+
                 var vs = new ValueSet(c.Id.ToInvariantString(), IndexTypes.Content, c.ContentType.Alias, indexValues);
 
                 yield return vs;
             }
         }
 
-        #region Private methods
+#region Private methods
         /// <summary>
         /// Collect clean values from a list of <see cref="Property"/> values
         /// </summary>
@@ -106,52 +122,58 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
 
             foreach (var property in properties)
             {
-                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextBox || property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextArea || property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TinyMce)
+                var editor = _propertyEditors[property.PropertyType.PropertyEditorAlias];
+                var indexVals = editor?.PropertyIndexValueFactory.GetIndexValues(property, culture, null, true);
+
+                if (indexVals != null)
                 {
-                    var propertyValues = property.Values.WhereNotNull().Where(x => x.PublishedValue != null);
-
-                    if (culture != null)
+                    foreach (var keyVal in indexVals)
                     {
-                        propertyValues = propertyValues.Where(x => x.Culture == culture);
-                    }
+                        var key = keyVal.Key;
 
-                    foreach (var value in propertyValues)
-                    {
-                        cleanValues.Add(CleanValue(value));
-                    }
-                }
+                        if (
+                            property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextBox ||
+                            property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TextArea ||
+                            property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.TinyMce
+                        )
+                        {
+                            foreach (var val in keyVal.Value)
+                            {
+                                if (val != null)
+                                {
+                                    cleanValues.Add(CleanValue(val.ToString()));
+                                }
+                            }
+                        }
 
-                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.Grid)
-                {
-                    var propertyValues = property.Values.WhereNotNull().Where(x => x.PublishedValue != null);
+                        if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.Grid)
+                        {
+                            if (key.StartsWith(UmbracoExamineFieldNames.RawFieldPrefix))
+                            {
+                                foreach (var val in keyVal.Value)
+                                {
+                                    if (val != null)
+                                    {
+                                        string json = val.ToString();
+                                        GridDataModel gridContent = new GridDataModel(null, null, JObject.Parse(json), _gridFactory);
+                                        string searchableText = gridContent.GetSearchableText(_gridContext);
+                                        cleanValues.Add(CleanValue(searchableText));
+                                    }
+                                }
+                            }
+                        }
 
-                    if (culture != null)
-                    {
-                        propertyValues = propertyValues.Where(x => x.Culture == culture);
-                    }
-
-                    foreach (var value in propertyValues)
-                    {
-                        string json = value.PublishedValue.ToString();
-                        GridDataModel gridContent = new GridDataModel(null, null, JObject.Parse(json), _gridFactory);
-                        string searchableText = gridContent.GetSearchableText(_gridContext);
-                        cleanValues.Add(CleanValue(searchableText));
-                    }
-                }
-
-                if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.BlockList)
-                {
-                    var propertyValues = property.Values.WhereNotNull().Where(x => x.PublishedValue != null);
-
-                    if (culture != null)
-                    {
-                        propertyValues = propertyValues.Where(x => x.Culture == culture);
-                    }
-
-                    foreach (var value in propertyValues)
-                    {
-                        string json = value.PublishedValue.ToString();
-                        GetBlockContent(json, ref cleanValues);
+                        if (property.PropertyType.PropertyEditorAlias == global::Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.BlockList)
+                        {
+                            foreach (var val in keyVal.Value)
+                            {
+                                if (val != null)
+                                {
+                                    string json = val.ToString();
+                                    GetBlockContent(json, ref cleanValues);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -227,7 +249,7 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
 
             return result;
         }
-        #endregion
+#endregion
     }
 }
 #endif

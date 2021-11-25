@@ -12,6 +12,7 @@ namespace Our.Umbraco.SearchSpellCheck
         public bool AutoRebuildIndex { get; set; } = false;
         public int AutoRebuildDelay { get; set; } = 5;
         public int AutoRebuildRepeat { get; set; } = 30;
+        public bool EnableLogging { get; set; } = false;
     }
 }
 #endif

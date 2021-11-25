@@ -18,6 +18,7 @@
             internal const string AutoRebuildIndex = "Our.Umbraco.SearchSpellCheck.AutoRebuildIndex";
             internal const string AutoRebuildDelay = "Our.Umbraco.SearchSpellCheck.AutoRebuildDelay";
             internal const string AutoRebuildRepeat = "Our.Umbraco.SearchSpellCheck.AutoRebuildRepeat";
+            internal const string EnableLogging = "Our.Umbraco.SearchSpellCheck.EnableLogging";
         }
     }
 }

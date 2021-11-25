@@ -5,7 +5,7 @@
 		<ContentTargetFolders>content</ContentTargetFolders>
 		<Product>Our.Umbraco.SearchSpellCheck</Product>
 		<PackageId>Our.Umbraco.SearchSpellCheck</PackageId>
-		<PackageVersion>1.0.0-beta.8</PackageVersion>
+		<PackageVersion>1.0.0-beta.9</PackageVersion>
 		<Title>Our.Umbraco.SearchSpellCheck</Title>
 		<Description>A Lucene.Net-based spell checker for Umbraco v8 and v9.</Description>
 		<PackageTags>umbraco, search, spell, check, examine, luncene, Rick, Butterfield</PackageTags>

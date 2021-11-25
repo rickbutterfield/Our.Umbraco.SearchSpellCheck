@@ -26,7 +26,8 @@ In v9 you'll need to use the `appSettings.json` file instead of the `web.config`
         "RebuildOnPublish": true,
         "AutoRebuildIndex": false,
         "AutoRebuildDelay": 5,
-        "AutoRebuildRepeat": 30
+        "AutoRebuildRepeat": 30,
+        "EnableLogging": false
     }
 }
 ```
@@ -41,6 +42,7 @@ When the package is installed, new keys will be added to the `appSettings` secti
 <add key="Our.Umbraco.SearchSpellCheck.AutoRebuildIndex" value="false" />
 <add key="Our.Umbraco.SearchSpellCheck.AutoRebuildDelay" value="5" />
 <add key="Our.Umbraco.SearchSpellCheck.AutoRebuildRepeat" value="30" />
+<add key="Our.Umbraco.SearchSpellCheck.EnableLogging" value="false" />
 ```
 
 ### Settings
@@ -57,6 +59,8 @@ When the package is installed, new keys will be added to the `appSettings` secti
 `AutoRebuildDelay`: Number of minutes you want to delay the background process from starting. Defaults to `5` minutes.
 
 `AutoRebuildRepeat`: Number of minutes you want the scheduled background process to run. Defaults to `30` minutes.
+
+`EnableLogging`: Useful if you want to see what properties are being indexed and the content that is returned from the index. Defaults to `false`.
 
 ## Usage
 ### v9

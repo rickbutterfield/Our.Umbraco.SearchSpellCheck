@@ -28,7 +28,7 @@ namespace Our.Umbraco.SearchSpellCheck.Services
             var suggestions = new List<string>();
             foreach (string word in words)
             {
-                var suggest = SuggestionData(word, numberOfSuggestions, accuracy, culture: culture);
+                var suggest = SuggestionData(word, numberOfSuggestions, accuracy, culture);
                 if (suggest != null)
                 {
                     var first = suggest.FirstOrDefault();
