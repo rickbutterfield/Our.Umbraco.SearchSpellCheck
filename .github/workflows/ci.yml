@@ -1,12 +1,20 @@
 name: CI
 
 on:
+  create:
+    branches:
+    - release/**
+    - hotfix/**
   push:
     branches:
     - main
+    - develop
   pull_request:
     branches:
     - main
+    - develop
+    - feature/**
+    - hotfix/**
     
 jobs:
   build:
@@ -35,4 +43,8 @@ jobs:
       run: nuget restore $env:SOLUTION
 
     - name: Build
-      run: msbuild $env:SOLUTION /t:Build /p:Configuration=$env:BUILD_CONFIG
+      run: dotnet build $env:SOLUTION --configuration=$env:BUILD_CONFIG --no-restore
+      
+    - name: Publish
+      if: startsWith(github.ref, 'refs/heads/release')
+      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
