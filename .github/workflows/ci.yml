@@ -30,6 +30,9 @@ jobs:
 
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.5
+      
+    - name: NuGet Restore
+      run: nuget restore $env:SOLUTION
 
     - name: Build
       run: msbuild $env:SOLUTION /t:Build /p:Configuration=$env:BUILD_CONFIG
