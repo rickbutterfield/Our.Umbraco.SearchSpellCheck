@@ -7,11 +7,9 @@ on:
     - hotfix/**
   push:
     branches:
-    - main
     - develop
   pull_request:
     branches:
-    - main
     - develop
     - feature/**
     - hotfix/**
@@ -44,11 +42,7 @@ jobs:
 
     - name: Build
       run: dotnet build $env:SOLUTION --configuration=$env:BUILD_CONFIG --no-restore
-      
-    - name: Publish to NuGet
-      if: startsWith(github.ref, 'refs/heads/release')
-      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
-      
+          
     - name: Add GitHub Package Source
       if: startsWith(github.ref, 'refs/heads/release')
       run: dotnet nuget add source --username rickbutterfield --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/rickbutterfield/index.json"
@@ -56,3 +50,7 @@ jobs:
     - name: Publish to GitHub
       if: startsWith(github.ref, 'refs/heads/release')
       run: nuget push **\*.nupkg -Source "github"
+      
+    - name: Publish to NuGet
+      if: startsWith(github.ref, 'refs/heads/release')
+      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
