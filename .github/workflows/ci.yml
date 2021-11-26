@@ -13,7 +13,7 @@ jobs:
 
     env:
       BUILD_CONFIG: 'Release'
-      SOLUTION: 'Our.Umbraco.SearchSpellCheck.sln'
+      SOLUTION: 'Our.Umbraco.SearchSpellCheck.csproj'
 
     runs-on: windows-2022
 
