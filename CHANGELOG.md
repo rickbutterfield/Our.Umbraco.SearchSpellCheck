@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.10] - 2021-11-25
+### Changed
+- Extra logging
+
 ## [1.0.0-beta.9] - 2021-11-25
 ### Added
 - Added support for enabling logging with the `EnableLogging` option
@@ -59,6 +63,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 ### Added
 - Initial release! Just the basic source code for now.
 
+[1.0.0-beta.10]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.10
 [1.0.0-beta.9]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.9
 [1.0.0-beta.8]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.8
 [1.0.0-beta.7]: https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/releases/tag/release-1.0.0-beta.7
