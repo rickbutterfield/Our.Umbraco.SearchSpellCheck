@@ -49,7 +49,7 @@ jobs:
       
     - name: Publish to GitHub
       if: startsWith(github.ref, 'refs/heads/release')
-      run: nuget push **\*.nupkg -Source "github" --api-key ${{ secrets.GITHUB_PAT }}
+      run: nuget push **\*.nupkg -Source "github" --api-key ${{ secrets.PAT }}
       
     - name: Publish to NuGet
       if: startsWith(github.ref, 'refs/heads/release')
