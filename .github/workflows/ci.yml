@@ -13,7 +13,7 @@ jobs:
 
     env:
       BUILD_CONFIG: 'Release'
-      SOLUTION: 'Our.Umbraco.SearchSpellCheck.sln'
+      SOLUTION: '**\*.sln'
 
     runs-on: windows-2022
 
@@ -25,7 +25,7 @@ jobs:
       with:
         dotnet-version: 5.x
         
-    - name: setup-msbuild
+    - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1
 
     - name: Setup NuGet
