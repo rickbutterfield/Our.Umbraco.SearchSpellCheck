@@ -28,8 +28,5 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.5
 
-    - name: Restore dependencies
-      run: nuget restore $SOLUTION
-
     - name: Build
-      run: dotnet build $SOLUTION --configuration $BUILD_CONFIG --no-restore
+      run: msbuild $SOLUTION --configuration $BUILD_CONFIG
