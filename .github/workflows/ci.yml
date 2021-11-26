@@ -32,4 +32,4 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.5
 
     - name: Build
-      run: msbuild $SOLUTION /t:Build /p:Configuration=$BUILD_CONFIG
+      run: msbuild $env:SOLUTION /t:Build /p:Configuration=$env:BUILD_CONFIG
