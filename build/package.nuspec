@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>Our.Umbraco.SearchSpellCheck</id>
-		<version>1.0.0-beta.10</version>
+		<version>1.0.0-beta.11</version>
 		<title>Our.Umbraco.SearchSpellCheck</title>
 		<authors>Rick Butterfield</authors>
 		<owners>Rick Butterfield</owners>
@@ -48,6 +48,7 @@
 	<files>
 		<file src="..\src\Our.Umbraco.SearchSpellCheck\bin\Release\net472\Our.Umbraco.SearchSpellCheck.dll" target="lib\net472\Our.Umbraco.SearchSpellCheck.dll" />
 		<file src="..\src\Our.Umbraco.SearchSpellCheck\bin\Release\net5.0\Our.Umbraco.SearchSpellCheck.dll" target="lib\net5.0\Our.Umbraco.SearchSpellCheck.dll" />
+    <file src="..\src\Our.Umbraco.SearchSpellCheck\bin\Release\net6.0\Our.Umbraco.SearchSpellCheck.dll" target="lib\net6.0\Our.Umbraco.SearchSpellCheck.dll" />
 		<file src="transforms\web.config.install.xdt" target="content" />
 	</files>
 </package>

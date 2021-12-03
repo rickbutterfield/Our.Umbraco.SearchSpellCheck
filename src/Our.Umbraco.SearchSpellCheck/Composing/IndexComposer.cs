@@ -1,8 +1,9 @@
 ﻿#if !NETCOREAPP
-using Examine;
 using Umbraco.Core;
 using Umbraco.Core.Composing;
 using Our.Umbraco.SearchSpellCheck.Indexing;
+using Our.Umbraco.SearchSpellCheck.Interfaces;
+using Our.Umbraco.SearchSpellCheck.Services;
 
 namespace Our.Umbraco.SearchSpellCheck.Composing
 {
@@ -18,6 +19,8 @@ namespace Our.Umbraco.SearchSpellCheck.Composing
             composition.RegisterUnique<SpellCheckIndexCreator>();
 
             composition.Components().Append<IndexComponent>();
+
+            composition.Register<ISuggestionService, SuggestionService>();
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net472;net5.0</TargetFrameworks>
+		<TargetFrameworks>net472;net5.0;net6.0</TargetFrameworks>
 		<ContentTargetFolders>content</ContentTargetFolders>
 		<Product>Our.Umbraco.SearchSpellCheck</Product>
 		<PackageId>Our.Umbraco.SearchSpellCheck</PackageId>
-		<PackageVersion>1.0.0-beta.10</PackageVersion>
+		<PackageVersion>1.0.0-beta.11</PackageVersion>
 		<Title>Our.Umbraco.SearchSpellCheck</Title>
 		<Description>A Lucene.Net-based spell checker for Umbraco v8 and v9.</Description>
 		<PackageTags>umbraco, search, spell, check, examine, luncene, Rick, Butterfield</PackageTags>
@@ -18,12 +18,6 @@
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
-	  <Optimize>True</Optimize>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0|AnyCPU'">
-	  <Optimize>True</Optimize>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">

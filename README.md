@@ -63,9 +63,8 @@ When the package is installed, new keys will be added to the `appSettings` secti
 `EnableLogging`: Useful if you want to see what properties are being indexed and the content that is returned from the index. Defaults to `false`.
 
 ## Usage
-### v9
-The package enables a `SuggestionService` to be injected in v9:
-```csharp
+The package enables an `ISuggestionService` to be injected into your constructor:
+```cs
 private readonly IExamineManager _examineManager;
 private readonly ISuggestionService _suggestionService;
 
@@ -77,12 +76,12 @@ public SearchService(IExamineManager examineManager, ISuggestionService suggesti
 
 public string GetSuggestions(string searchTerm)
 {
-    return _suggestionService.GetSuggestion(searchTerm, accuracy: 0.25f);
+    return _suggestionService.GetSuggestion(searchTerm, suggestionAccuracy: 0.25f);
 }
 ```
 
-Which could in turn be returned in a view component:
-```csharp
+Which could in turn be returned in a view component or model:
+```cs
 if (model.TotalResults == 0)
 {
     model.SpellCheck = _searchService.GetSuggestions(model.SearchTerm);
@@ -90,40 +89,12 @@ if (model.TotalResults == 0)
 ```
 
 And then returned in the view:
-```csharp
+```cs
 @if (!string.IsNullOrEmpty(Model.SpellCheck))
 {
     <p>Did you mean <a href="?s=@Model.SpellCheck"><em>@Model.SpellCheck</em></a>?</p>
 }
 ```
-
-### v8
-The package is a single class called `Our.Umbraco.SearchSpellCheck.Suggestions`.
-
-Within a `SearchService`, you could use the `Suggestions` class to get suggestions for a given word:
-```csharp
-public string GetSuggestion(string searchTerm)
-{
-    return Suggestions.GetSuggestion(searchTerm);
-}
-```
-
-This could then be returned within a ViewModel:
-```csharp
-if (!string.IsNullOrEmpty(viewModel.SearchTerm))
-{
-    viewModel.SpellCheck = _searchService.GetSuggestion(viewModel.SearchTerm);
-}
-```
-
-And then in your view:
-```csharp
-@if (Model.TotalResults == 0 && !string.IsNullOrEmpty(Model.SpellCheck))
-{
-    @:Did you mean <em><a href="?q=@Model.SpellCheck">@Model.SpellCheck</a></em>?
-}
-```
-
 
 ## License
 Copyright &copy; 2021 [Rick Butterfield](https://rickbutterfield.com), and other contributors

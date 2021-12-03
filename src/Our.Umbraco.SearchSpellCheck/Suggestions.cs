@@ -7,24 +7,26 @@ using System.Linq;
 using Lucene.Net.Store;
 using Lucene.Net.Index;
 using System.Collections.Generic;
+using System;
 
 namespace Our.Umbraco.SearchSpellCheck
 {
     public static class Suggestions
     {
-        public static string GetSuggestion(string searchTerm, int numberOfSuggestions = 10, float accuracy = 0.75f, string culture = null)
+        [Obsolete("Use the ISuggestionService injected into your constructor")]
+        public static string GetSuggestion(string searchTerm, int numberOfSuggestions = 10, float suggestionAccurary = 0.75f, string culture = null)
         {
             var words = searchTerm.Split(' ');
             var suggestions = new List<string>();
             foreach (string word in words)
             {
-                var suggest = SuggestionData(word, numberOfSuggestions, accuracy, culture);
+                var suggest = SuggestionData(word, numberOfSuggestions, culture);
                 if (suggest != null)
                 {
                     var first = suggest.FirstOrDefault();
                     if (first != null)
                     {
-                        if (first.Priority > accuracy)
+                        if (first.Priority > suggestionAccurary)
                         {
                             suggestions.Add(first.Word);
                         }
@@ -39,7 +41,7 @@ namespace Our.Umbraco.SearchSpellCheck
             return string.Join(" ", suggestions);
         }
 
-        internal static IOrderedEnumerable<Suggestion> SuggestionData(string word, int numberOfSuggestions = 10, float searchAccuracy = 1f, string culture = null)
+        internal static IOrderedEnumerable<Suggestion> SuggestionData(string word, int numberOfSuggestions = 10, string culture = null)
         {
             string indexName = ConfigurationManager.AppSettings[Constants.Configuration.IndexName] ?? Constants.Configuration.DefaultIndexName;
 
