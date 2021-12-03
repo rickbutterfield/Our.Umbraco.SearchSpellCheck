@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 ### Removed
 - Obsoleted the `Suggestions` class for .NET Framework. You can now use the `ISuggestionService` interface via dependency injection.
 
+## [1.0.0-beta.10] - 2021-11-25
+### Changed
+- Extra logging
+
 ## [1.0.0-beta.9] - 2021-11-25
 ### Added
 - Added support for enabling logging with the `EnableLogging` option
