@@ -23,6 +23,7 @@
 	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
 		<PackageReference Include="UmbracoCms.Core" version="8.15.0" />
 		<PackageReference Include="UmbracoCms.Web" version="8.15.0" />
+		<PackageReference Include="Skybrud.TextAnalysis" Version="2.0.0" />
 		<PackageReference Include="Skybrud.Umbraco.GridData" version="3.0.2" />
 		<PackageReference Include="Examine" version="1.2.0" />
 		<PackageReference Include="Lucene.Net" version="3.0.3" />
@@ -30,20 +31,22 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-		<PackageReference Include="Examine" version="2.0.0" />
-		<PackageReference Include="Umbraco.Cms.Core" version="9.0.0" />
-		<PackageReference Include="Umbraco.Cms.Infrastructure" version="9.0.0" />
-		<PackageReference Include="Umbraco.Cms.Examine.Lucene" version="9.0.0" />
+		<PackageReference Include="Examine" version="2.0.1" />
+		<PackageReference Include="Umbraco.Cms.Core" version="9.2.0" />
+		<PackageReference Include="Umbraco.Cms.Infrastructure" version="9.2.0" />
+		<PackageReference Include="Umbraco.Cms.Examine.Lucene" version="9.2.0" />
+		<PackageReference Include="Skybrud.TextAnalysis" Version="2.0.0" />
 		<PackageReference Include="Skybrud.Umbraco.GridData" version="4.0.0-alpha002" />
 		<PackageReference Include="Lucene.Net" version="4.8.0-beta00014" />
 		<PackageReference Include="Lucene.Net.Suggest" version="4.8.0-beta00014" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<PackageReference Include="Examine" version="2.0.0" />
-		<PackageReference Include="Umbraco.Cms.Core" version="9.0.0" />
-		<PackageReference Include="Umbraco.Cms.Infrastructure" version="9.0.0" />
-		<PackageReference Include="Umbraco.Cms.Examine.Lucene" version="9.0.0" />
+		<PackageReference Include="Examine" version="2.0.1" />
+		<PackageReference Include="Umbraco.Cms.Core" version="9.2.0" />
+		<PackageReference Include="Umbraco.Cms.Infrastructure" version="9.2.0" />
+		<PackageReference Include="Umbraco.Cms.Examine.Lucene" version="9.2.0" />
+		<PackageReference Include="Skybrud.TextAnalysis" Version="2.0.0" />
 		<PackageReference Include="Skybrud.Umbraco.GridData" version="4.0.0-alpha002" />
 		<PackageReference Include="Lucene.Net" version="4.8.0-beta00014" />
 		<PackageReference Include="Lucene.Net.Suggest" version="4.8.0-beta00014" />

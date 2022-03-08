@@ -15,6 +15,7 @@ using Lucene.Net.Store;
 using System.Collections.Generic;
 using Our.Umbraco.SearchSpellCheck.Interfaces;
 
+
 namespace Our.Umbraco.SearchSpellCheck.Services
 {
     public class SuggestionService : ISuggestionService
@@ -77,8 +78,9 @@ namespace Our.Umbraco.SearchSpellCheck.Services
             var fieldDictionary = new LuceneDictionary(indexReader, fieldName);
             var nodeNameDictionary = new LuceneDictionary(indexReader, "nodeName");
 
-            var fieldConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, null);
-            var nodeNameConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, null);
+            var analyser = new StandardAnalyzer(Lucene.Net.Util.LuceneVersion.LUCENE_48);
+            var fieldConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, analyser);
+            var nodeNameConfig = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, analyser);
 
             checker.IndexDictionary(fieldDictionary, fieldConfig, true);
             checker.IndexDictionary(nodeNameDictionary, nodeNameConfig, true);
