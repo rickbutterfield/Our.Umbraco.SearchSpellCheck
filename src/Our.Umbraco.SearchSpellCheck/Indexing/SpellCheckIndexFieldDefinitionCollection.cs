@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP
-using Examine;
+﻿using Examine;
 
 namespace Our.Umbraco.SearchSpellCheck
 {
@@ -16,4 +15,3 @@ namespace Our.Umbraco.SearchSpellCheck
         };
     }
 }
-#endif

@@ -1,7 +1,5 @@
-﻿#if NETCOREAPP
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Our.Umbraco.SearchSpellCheck.Indexing;
 using System;
 using System.Threading.Tasks;
 using Umbraco.Cms.Core;
@@ -64,4 +62,3 @@ namespace Our.Umbraco.SearchSpellCheck.RecurringTasks
         }
     }
 }
-#endif

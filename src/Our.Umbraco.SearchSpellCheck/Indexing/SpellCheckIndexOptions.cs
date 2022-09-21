@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP
-using Examine.Lucene;
+﻿using Examine.Lucene;
 using Examine.Lucene.Analyzers;
 using Lucene.Net.Index;
 using Microsoft.Extensions.Options;
@@ -46,4 +45,3 @@ namespace Our.Umbraco.SearchSpellCheck
             => throw new NotImplementedException("This is never called and is just part of the interface");
     }
 }
-#endif

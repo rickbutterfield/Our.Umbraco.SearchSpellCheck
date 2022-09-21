@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP
-using Examine;
+﻿using Examine;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -271,4 +270,3 @@ namespace Our.Umbraco.SearchSpellCheck.Indexing
 #endregion
     }
 }
-#endif
