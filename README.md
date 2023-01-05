@@ -1,5 +1,7 @@
-# Our.Umbraco.SearchSpellCheck [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md) [![NuGet](https://img.shields.io/nuget/v/Our.Umbraco.SearchSpellCheck.svg)](https://www.nuget.org/packages/Our.Umbraco.SearchSpellCheck/) [![CI](https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/actions/workflows/ci.yml/badge.svg)](https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/actions/workflows/ci.yml)
-A Lucene.Net-based spell checker for Umbraco v8 and v9.
+# Our.Umbraco.SearchSpellCheck 
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![NuGet](https://img.shields.io/nuget/v/Our.Umbraco.SearchSpellCheck.svg)](https://www.nuget.org/packages/Our.Umbraco.SearchSpellCheck/) [![CI](https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/actions/workflows/ci.yml/badge.svg)](https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/actions/workflows/ci.yml)
+
+## A Lucene.Net-based spell checker for Umbraco v8 and v9.
 
 This project wouldn't exist without [Lars-Erik Aabech](https://github.com/lars-erik) who [created a v7 version of this](https://blog.aabech.no/archive/building-a-spell-checker-for-search-in-umbraco/), which a lot of the work is based on.
 
@@ -94,6 +96,6 @@ And then returned in the view:
 ```
 
 ## License
-Copyright &copy; 2021 [Rick Butterfield](https://rickbutterfield.com), and other contributors
+Copyright &copy; 2021-2023 [Rick Butterfield](https://rickbutterfield.com), and other contributors
 
 Licensed under the [MIT License](LICENSE.md).
