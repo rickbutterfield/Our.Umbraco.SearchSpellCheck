@@ -1,5 +1,7 @@
 # Our.Umbraco.SearchSpellCheck 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![NuGet](https://img.shields.io/nuget/v/Our.Umbraco.SearchSpellCheck.svg)](https://www.nuget.org/packages/Our.Umbraco.SearchSpellCheck/) [![CI](https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/actions/workflows/ci.yml/badge.svg)](https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/actions/workflows/ci.yml)
+[![NuGet](https://img.shields.io/nuget/v/Our.Umbraco.SearchSpellCheck.svg)](https://www.nuget.org/packages/Our.Umbraco.SearchSpellCheck/)
+[![GitHub](https://img.shields.io/github/license/rickbutterfield/Our.Umbraco.SearchSpellCheck)](https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/blob/main/LICENSE)
+[![CI](https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/actions/workflows/ci.yml/badge.svg)](https://github.com/rickbutterfield/Our.Umbraco.SearchSpellCheck/actions/workflows/ci.yml)
 
 ## A Lucene.Net-based spell checker for Umbraco v8 and v9.
 
